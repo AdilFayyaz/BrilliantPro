@@ -31,6 +31,7 @@ router.get("/", function (req, res){
 
 //get total number of learners
 router.get("/totalLearners", function (req, response){
+    console.log("Request to get total learners")
     mongoClient.connect(function (err, client) {
         const db = client.db(dbName);
         db.listCollections({name: 'learner'})
@@ -38,6 +39,7 @@ router.get("/totalLearners", function (req, response){
                 if (info) {
                     db.collection("learner").count(function (err, count) {
                         if (err) throw err;
+                        console.log(count.toString())
                         response.send(count.toString())
                     });
                 }
@@ -121,7 +123,7 @@ router.get("/totalEnrolled", function (req, res){
               }
           }
           console.log(mySet1)
-          res.send(Array.from(mySet1))
+          res.send(Array.from(mySet1).length.toString())
       });
     });
 })
@@ -142,13 +144,24 @@ router.get("/totalCompleted", function (req, res){
                         }
                     },
                 }
-            }
+            },
+            { "$group": { _id: "$courses.courseId" } }
         ]
         db.collection("learner").aggregate(query)
             .toArray(function (err, items) {
                 if (err) throw err;
                 console.log(items);
-                res.send(items.length.toString())
+                const mySet1 = new Set()
+                for(var i = 0; i < items.length; i++) {
+                    console.log(i)
+                    for (var j=0; j<items[i]._id.length; j++){
+                        // console.log(j)
+                        console.log(items[i]._id[j])
+                        mySet1.add(items[i]._id[j])
+                    }
+                }
+                console.log(mySet1)
+                res.send(Array.from(mySet1).length.toString())
             });
     });
 })
@@ -375,6 +388,22 @@ router.get("/failCourseLearners/courseId/:courseId", function(req, res){
                 console.log(items);
                 res.send(items)
             });
+    });
+})
+
+router.get("/allCourses", function (req, res){
+    console.log("Getting all courses")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("course").find({})
+            .project({name:1})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+            });
+
     });
 })
 
