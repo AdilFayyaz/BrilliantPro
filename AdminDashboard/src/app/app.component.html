@@ -1,0 +1,40 @@
+
+<div class="d-flex box">
+  <ul ngbNav #nav="ngbNav" [(activeId)]="active"  orientation="vertical" [animation]="animation">
+    <li class="image">
+      <img class="logo" src="assets/logo.png" alt="logo of application">
+    </li>
+    <li ngbNavItem="dashboard" class="navCustomItem">
+      <a ngbNavLink class="navActive">Dashboard</a>
+      <ng-template ngbNavContent>
+        <app-admin-dashboard></app-admin-dashboard>
+      </ng-template>
+    </li>
+    <li ngbNavItem="courses" class="navCustomItem">
+      <a ngbNavLink>Courses</a>
+      <ng-template ngbNavContent>
+        <p> Courses Component Here</p>
+      </ng-template>
+    </li>
+    <li ngbNavItem="materials" class="navCustomItem">
+      <a ngbNavLink>Materials</a>
+      <ng-template ngbNavContent>
+        <p> Materials Component Here</p>
+      </ng-template>
+    </li>
+    <li ngbNavItem="assessments" class="navCustomItem">
+      <a ngbNavLink>Assessments</a>
+      <ng-template ngbNavContent>
+        <p>Assessments Component Here</p>
+      </ng-template>
+    </li>
+    <li ngbNavItem="learners"class="navCustomItem">
+      <a ngbNavLink>Learners</a>
+      <ng-template ngbNavContent>
+        <p>Learners Component Here</p>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="nav" class="ms-4"></div>
+</div>
