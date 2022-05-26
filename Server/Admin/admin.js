@@ -407,6 +407,95 @@ router.get("/allCourses", function (req, res){
     });
 })
 
+router.get("/allFullCourses", function (req, res){
+    console.log("Getting all courses")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("course").find({})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/allLearners", function (req, res){
+    console.log("Getting all Learners")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("learner").find({})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    // console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+//to be used to add enroll or un-enroll a learner from a course
+router.get("/updateLearner", function(req, res){
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        let docId=new ObjectId(req.body._id)
+        console.log(docId)
+        delete req.body['_id']
+        db.collection("learner")
+            .updateOne({
+                    _id: docId
+                }, {
+                    $set: req.body
+                },
+                function (err, result){
+                    if (err) throw err;
+                    console.log("Document Updated");
+                    res.send(result)
+                })
+    });
+})
+
+//to be used to edit something in course or add/remove material or assignment
+router.get("/updateCourse", function(req, res){
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        let docId=new ObjectId(req.body._id)
+        console.log(docId)
+        delete req.body['_id']
+        db.collection("course")
+            .updateOne({
+                    _id: docId
+                }, {
+                    $set: req.body
+                },
+                function (err, result){
+                    if (err) throw err;
+                    console.log("Document Updated");
+                    res.send(result)
+                })
+    });
+})
+
+router.get("/getCourse/:courseId", function(req, res){
+    console.log("Getting course ", req.params.courseId)
+    let docId=new ObjectId(req.params.courseId)
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        console.log(docId)
+        db.collection("course").find({_id:docId})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
 router.use(express.json());
 
 module.exports=router
