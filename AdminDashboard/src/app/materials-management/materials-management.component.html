@@ -1,0 +1,73 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div>
+
+    <div class="mainBox">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AddFolder">
+                            Create Folder <mat-icon id="addIcon">add</mat-icon>
+                        </button>
+                    </th>
+                    <th>
+                        <form id="materialForm" #form="ngForm" (ngSubmit)="uploadFiles()">
+                            <input type="file" id="materialFile" name="materialFile" (change)="fileSelect($event)" multiple >
+                            <button type="submit" class="btn btn-primary btn-sm"> Upload Files </button>
+                        </form>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+      <table class="table table-borderless">
+        <thead>
+          
+        </thead>
+        <tbody *ngFor="let l of folders">
+            <tr>  
+                <td>{{l.name}}</td>
+                <td></td>
+                <td><button class="btn btn-primary" (click)="deleteFolder(l._id)">Delete</button></td>
+                <td><input type="file" id="materialFile2" name="materialFile2" (change)="fileSelect($event)" multiple >
+                    <button type="submit" class="btn btn-secondary btn-sm" (click)="uploadFiles(); addMaterialToFolder(l._id)"> <mat-icon>add</mat-icon> Add</button></td>
+            </tr>
+            <tr *ngFor="let q of l.files">
+                <td></td>
+                <td>{{getFileNameOnId(q)}}</td>
+                <td><button class="btn btn-primary" (click)="deleteFile(q)"> Delete</button></td>
+                <td></td>
+            </tr>
+        </tbody>
+
+
+      </table>
+        
+    </div>
+   
+    
+    <!-- Create Folder Modal -->
+    <div class="modal fade" id="AddFolder" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLong">Create a Folder</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            Folder name
+            <input type="text" class="form-control" [(ngModel)]="folderName">
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click) = "createFolder()" data-dismiss="modal">Create</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+
