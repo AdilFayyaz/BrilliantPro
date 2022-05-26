@@ -6,18 +6,22 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {HttpClientModule} from "@angular/common/http";
 import {ChartsModule} from 'ng2-charts';
+import { CourseComponent } from './course/course.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    CourseComponent
   ],
   imports: [
     BrowserModule,
     NgbModule,
     CountUpModule,
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,33 +5,33 @@
       <img class="logo" src="assets/logo.png" alt="logo of application">
     </li>
     <li ngbNavItem="dashboard" class="navCustomItem">
-      <a ngbNavLink class="navActive">Dashboard</a>
+      <a ngbNavLink class="navActive" routerLink="/dashboard">Dashboard</a>
       <ng-template ngbNavContent>
-        <app-admin-dashboard></app-admin-dashboard>
+        <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="courses" class="navCustomItem">
-      <a ngbNavLink>Courses</a>
+    <li ngbNavItem="courses"  class="navCustomItem">
+      <a ngbNavLink routerLink="/course">Courses</a>
       <ng-template ngbNavContent>
-        <p> Courses Component Here</p>
+        <router-outlet></router-outlet>
       </ng-template>
     </li>
     <li ngbNavItem="materials" class="navCustomItem">
-      <a ngbNavLink>Materials</a>
+      <a ngbNavLink routerLink="/course">Materials</a>
       <ng-template ngbNavContent>
-        <p> Materials Component Here</p>
+        <router-outlet></router-outlet>
       </ng-template>
     </li>
     <li ngbNavItem="assessments" class="navCustomItem">
-      <a ngbNavLink>Assessments</a>
+      <a ngbNavLink routerLink="/course">Assessments</a>
       <ng-template ngbNavContent>
-        <p>Assessments Component Here</p>
+        <router-outlet></router-outlet>
       </ng-template>
     </li>
     <li ngbNavItem="learners"class="navCustomItem">
-      <a ngbNavLink>Learners</a>
+      <a ngbNavLink routerLink="/course">Learners</a>
       <ng-template ngbNavContent>
-        <p>Learners Component Here</p>
+        <router-outlet></router-outlet>
       </ng-template>
     </li>
   </ul>

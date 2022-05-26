@@ -48,7 +48,8 @@ this.selected=course">
   </div>
 </div>
 <div style="text-align: center; margin-top: 20px">
-<h5 class="text-secondary">{{selected.name}}</h5>
+
+<h5 *ngIf="selected" class="text-secondary">{{selected.name}}</h5>
 <div style="display: block; " class="chart">
   <span></span>
   <canvas baseChart
