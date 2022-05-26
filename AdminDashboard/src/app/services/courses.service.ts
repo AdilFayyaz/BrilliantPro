@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import {CoursesInterface} from "./coursesInterface";
-import {CourseLearnerInterface} from "./CourseLearnerInterface";
+import {CoursesInterface} from "../interfaces/coursesInterface";
+import {CourseLearnerInterface} from "../interfaces/CourseLearnerInterface";
+import {CourseDBInterface} from "../interfaces/CourseDBInterface";
 
 
 @Injectable({
@@ -32,6 +33,10 @@ export class CoursesService {
     return this.http.get<CoursesInterface[]>("http://localhost:3000/admin/allCourses");
   }
 
+  getAllFullCourses(){
+    return this.http.get<CourseDBInterface[]>("http://localhost:3000/admin/allFullCourses");
+  }
+
   getEnrolledInCourse(id:string){
     return this.http.get<any>("http://localhost:3000/admin/enrolledCourseLearners/courseId/"+id);
   }
@@ -46,5 +51,9 @@ export class CoursesService {
   }
   getMidwayInCourse(id:string){
     return this.http.get<any>("http://localhost:3000/admin/halfCourseLearners/courseId/"+id);
+  }
+
+  getCourseInformation(id:string){
+    return this.http.get<CourseDBInterface[]>("http://localhost:3000/admin/getCourse/"+id);
   }
 }
