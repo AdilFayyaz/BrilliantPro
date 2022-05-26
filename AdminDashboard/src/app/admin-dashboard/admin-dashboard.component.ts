@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CoursesService} from "../courses.service";
-import {CoursesInterface} from "../coursesInterface";
+import {CoursesService} from "../services/courses.service";
+import {CoursesInterface} from "../interfaces/coursesInterface";
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 

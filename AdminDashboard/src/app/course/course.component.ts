@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {CoursesService} from "../services/courses.service";
+import {CoursesInterface} from "../interfaces/coursesInterface";
+import {CourseDBInterface} from "../interfaces/CourseDBInterface";
 
 @Component({
   selector: 'app-course',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CourseComponent implements OnInit {
 
-  constructor() { }
+  courses:any[]=[]
+  constructor(private coursesService:CoursesService) { }
 
   ngOnInit(): void {
+    this.getAllFullCourses();
+  }
+
+  getAllFullCourses(){
+    this.coursesService.getAllFullCourses().subscribe((data:CourseDBInterface[])=>
+    {
+      this.courses=data;
+    })
   }
 
 }

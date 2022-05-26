@@ -8,15 +8,19 @@ import {HttpClientModule} from "@angular/common/http";
 import {ChartsModule} from 'ng2-charts';
 import { CourseComponent } from './course/course.component';
 import { AppRoutingModule } from './app-routing.module';
+import { LearnerComponent } from './learner/learner.component';
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminDashboardComponent,
-    CourseComponent
+    CourseComponent,
+    LearnerComponent,
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     NgbModule,
     CountUpModule,
     HttpClientModule,
