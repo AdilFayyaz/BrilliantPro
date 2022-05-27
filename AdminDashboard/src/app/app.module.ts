@@ -10,6 +10,8 @@ import { CourseComponent } from './course/course.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LearnerComponent } from './learner/learner.component';
 import {CommonModule} from "@angular/common";
+import { CourseDetailsComponent } from './course-details/course-details.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -17,6 +19,7 @@ import {CommonModule} from "@angular/common";
     AdminDashboardComponent,
     CourseComponent,
     LearnerComponent,
+    CourseDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import {CommonModule} from "@angular/common";
     CountUpModule,
     HttpClientModule,
     ChartsModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [],
