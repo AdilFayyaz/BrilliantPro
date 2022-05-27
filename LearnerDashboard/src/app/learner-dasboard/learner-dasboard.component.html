@@ -1,0 +1,28 @@
+<div>
+<!-- <img src="imagesbg.jpg" id="bg" alt=""> -->
+
+<div class="glasscard">
+    <div class="nav">
+        <p>NAVBAR</p>
+
+    </div>
+    <!-- <router-outlet></router-outlet> -->
+
+    <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
+        
+            <div class="completed p-2 bd-highlight">
+                <h4>Completed Courses</h4>
+              
+                <a *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name}"  >{{c.name}}<br></a>
+              
+            </div>
+            <div class="unfinished p-2 bd-highlight">
+                <h4>Unfinished Courses</h4>
+                <h6 *ngFor="let i of unfinishedCoursesNames">{{i.name}}</h6>
+            </div>
+
+   
+
+    </main>
+</div>
+</div>
