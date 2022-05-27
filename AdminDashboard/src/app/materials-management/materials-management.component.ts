@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MaterialsManagementService } from './materials-management.service';
 import { HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { delay } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -14,8 +15,19 @@ export class MaterialsManagementComponent implements OnInit {
   existingFiles : MaterialData[] | undefined;
 
   folderName: string = "";
-
+  folderId: number | undefined;
+  materialId: number | undefined;
+  materialToEdit: any;
   folders: FolderData[] | undefined;
+
+  editMaterialForm = new FormGroup({
+    name: new FormControl(''),
+    type: new FormControl(''),
+    isDownloadable2: new FormControl(''),
+    isDownloadable: new FormControl(Boolean)
+  })
+
+
   getAllMaterials(){
     this.materialsManagementService.getMaterials().subscribe(mats =>{
       this.existingFiles = mats;
@@ -24,7 +36,7 @@ export class MaterialsManagementComponent implements OnInit {
   constructor(private materialsManagementService: MaterialsManagementService) { }
   
   ngOnInit(): void {
-    this.getAllMaterials();
+    // this.getAllMaterials();
     this.getAllFolders();
   }
 
@@ -32,35 +44,14 @@ export class MaterialsManagementComponent implements OnInit {
 
   fileSelect(event: any){
     this.files = event.target.files;
-    console.log(this.files)
-  }
-  uploadFiles(){
-    if(this.files){
-      for (let i = 0; i < this.files.length; i++) {
-        const firstFile = this.files[i];
-        this.materialsManagementService.uploadFileToServer(firstFile).subscribe(
-          (e: HttpEvent<any>) => {
-            if (e.type === HttpEventType.UploadProgress) {
-              console.log('Upload Progress: ');
-              
-            } else if (e.type === HttpEventType.Response) {
-              console.log(e);
-            }
-            this.getAllMaterials();
-            var formM = <HTMLFormElement>document.getElementById('materialForm');
-            formM?.reset();
-          },
-          (error) => {
-            console.log(error);
-          }
-        )
-      }
-    }
   }
   createFolder(){
-    this.materialsManagementService.createFolder(this.folderName);
-    this.folderName = "";
-    this.getAllFolders();
+    this.materialsManagementService.createFolder(this.folderName).subscribe(
+      (data) => {
+        console.log(data);
+        this.getAllFolders();
+      }
+    )
   }
   getAllFolders(){
     this.materialsManagementService.getFolders().subscribe(folders =>{
@@ -94,53 +85,81 @@ export class MaterialsManagementComponent implements OnInit {
   }
 
   // delete a file
-  deleteFile(id: number | undefined){
-    this.materialsManagementService.deleteMaterial(id);
-    this.getAllFolders();
-    this.getAllMaterials();
-  }
-
-  // add material to folder
-  idsList: number[] =[];
-  addMaterialToFolder(folderId: number | undefined){  
-    setTimeout (() =>{ 
-      if (this.files){
-        console.log(this.files)
-        // get list of object Ids of files
-        this.materialsManagementService.getListOfFileIds(this.files).subscribe(
-          values => {
-            console.log(values.body)
-            // var j = JSON.parse(values.body)
-            for(var x=0; x< values.body.length; x++){
-              this.idsList.push(values.body[x]._id)
-            }
-            console.log(this.idsList)
-            if(this.idsList){
-              for(var i=0;i<this.idsList.length;i++){
-                console.log("Adding to server folder")
-                this.materialsManagementService.uploadFileToServerOnFolder(this.idsList[i], folderId)
-              }
-            }
-          }
-        )
-        this.files = [];
+  deleteFile(materialid: number | undefined, folderid: number | undefined){
+    this.materialsManagementService.deleteMaterial(materialid, folderid).subscribe(
+      (data) => {
+        console.log(data);
+        this.getAllFolders();
       }
-      console.log ("First")}
-      , 500)
-    
-   
-      
-      // for(var i=0;i<x.length;i++){
-
-      // }
-      // add files to folder
-      // if(x!=null){
-        // for(var i = 0; i < x.length; i++){
-      // this.materialsManagementService.uploadFileToServerOnFolder(x, folderId);
-        // }
-      // }
-    
+    )
+    this.getAllFolders();
   }
+
+ // add material to a folder
+  addMaterialToFolder(){  
+    if(this.folderId){
+      console.log(this.files)
+      this.materialsManagementService.uploadFile(this.files, this.folderId).subscribe(
+        (e: HttpEvent<any>) => {
+          if (e.type === HttpEventType.UploadProgress) {
+            console.log('Upload Progress: ');
+            this.getAllFolders();
+            
+          } else if (e.type === HttpEventType.Response) {
+            console.log(e);
+          }
+          this.getAllFolders();
+          var formM = <HTMLFormElement>document.getElementById('materialForm');
+          formM?.reset();
+        }
+      )
+      this.getAllFolders();
+    }
+ 
+  }
+
+  // edit Current Folder
+  editCurrentFolder(folderId: number | undefined){
+    this.folderId = folderId;
+  }
+  // edit Folder
+  editFolder(){
+    this.materialsManagementService.editFolder(this.folderId, this.folderName).subscribe(
+      (data) => {
+        console.log(data);
+        this.getAllFolders();
+      }
+    );
+    this.getAllFolders();
+  }
+
+  // edit Current Material
+  editCurrentMaterial(materialId: number | undefined, folderId: number | undefined, material: any){
+    this.materialToEdit = material;
+    this.folderId = folderId;
+    this.materialId = materialId;
+  }
+
+  // edit Material
+  editMaterial(){
+    if(this.editMaterialForm.value.isDownloadable2 == "true"){
+      this.editMaterialForm.value.isDownloadable = true;
+    }
+    if(this.editMaterialForm.value.isDownloadable2 == "false"){
+      this.editMaterialForm.value.isDownloadable = false;
+    }
+    console.log(this.editMaterialForm.value)
+    this.materialsManagementService.editMaterial(this.editMaterialForm.value,this.materialId, this.folderId, this.materialToEdit).subscribe(
+      (data) => {
+        console.log(data);
+        this.getAllFolders();
+      }
+    );
+    this.getAllFolders();
+    this.editMaterialForm.reset();
+  }
+
+
 }
 
 class MaterialData{
@@ -155,5 +174,5 @@ class FolderData{
   _id: number | undefined;
   name: string | undefined;
   parent: string | undefined;
-  files: number[] | undefined;
+  materials: MaterialData[] | undefined;
 }

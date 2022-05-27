@@ -1,73 +1,229 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<div>
+<div id="tabsView">
+    <mdb-tabs>
+        <mdb-tab title="Add Folder">
+            <!-- Create a Folder -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form (ngSubmit)="createFolder()" name="createFolder">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Folder Name</label>
+                                            <input type="text" class="form-control" [(ngModel)]="folderName"
+                                                placeholder="Folder Name" name="folderName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- submit button -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>  
+                    </div>
+                </div>
+            </div>    
+        </mdb-tab>
+        <mdb-tab title="Add File to Folder">
+            <!-- get list of all folders -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Pass selected folder id as parameter to addMaterialToFolder function -->
+                            <form name="folderId" id="materialForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Folder Name</label>
+                                            <select class="form-control" [(ngModel)]="folderId" name="folderId" id="folderNameInAdd">
+                                                <option *ngFor="let folder of folders" [value]="folder._id">{{folder.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- upload files -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Upload Files</label>
+                                            <input type="file" class="form-control" multiple (change)="fileSelect($event)"
+                                                placeholder="Upload Files" name="files">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- submit button -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary" (click) = "addMaterialToFolder()">Add</button>
+                                    </div>
+                                </div>
+                            
+                            </form>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </mdb-tab>
+        <mdb-tab title="View">
+            <!-- View folders and content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Folder Content</label>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Material</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- get all folders content -->
+                                                <tr *ngFor="let material of folders">
+                                                    <td>{{material.name}}</td>
+                                                    <td>
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Type</th>
+                                                                    <th>Downloadable</th>
+                                                                    <th>Action</th>
+                                                                </tr>
 
-    <div class="mainBox">
-        <table class="table table-borderless">
-            <thead>
-                <tr>
-                    <th>
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#AddFolder">
-                            Create Folder <mat-icon id="addIcon">add</mat-icon>
-                        </button>
-                    </th>
-                    <th>
-                        <form id="materialForm" #form="ngForm" (ngSubmit)="uploadFiles()">
-                            <input type="file" id="materialFile" name="materialFile" (change)="fileSelect($event)" multiple >
-                            <button type="submit" class="btn btn-primary btn-sm"> Upload Files </button>
-                        </form>
-                    </th>
-                </tr>
-            </thead>
-        </table>
-      <table class="table table-borderless">
-        <thead>
-          
-        </thead>
-        <tbody *ngFor="let l of folders">
-            <tr>  
-                <td>{{l.name}}</td>
-                <td></td>
-                <td><button class="btn btn-primary" (click)="deleteFolder(l._id)">Delete</button></td>
-                <td><input type="file" id="materialFile2" name="materialFile2" (change)="fileSelect($event)" multiple >
-                    <button type="submit" class="btn btn-secondary btn-sm" (click)="uploadFiles(); addMaterialToFolder(l._id)"> <mat-icon>add</mat-icon> Add</button></td>
-            </tr>
-            <tr *ngFor="let q of l.files">
-                <td></td>
-                <td>{{getFileNameOnId(q)}}</td>
-                <td><button class="btn btn-primary" (click)="deleteFile(q)"> Delete</button></td>
-                <td></td>
-            </tr>
-        </tbody>
-
-
-      </table>
-        
-    </div>
-   
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- get all materials in folder -->
+                                                                <tr *ngFor="let m of material.materials">
+                                                                    <td>{{m.name}}</td>
+                                                                    <td>{{m.type}}</td>
+                                                                    <td>{{m.isDownloadable}}</td>
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editMaterialModal" (click)="editCurrentMaterial(m._id, material._id, m)">Edit</button>
+                                                                        <button type="button" class="btn btn-primary" (click)="deleteFile(m._id, material._id)">Delete</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editFolderModal" (click)="editCurrentFolder(material._id)">Edit</button>
+                                                        <button type="button" class="btn btn-danger" (click)="deleteFolder(material._id)">Delete</button>
+                                                    </td>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mdb-tab>
+    </mdb-tabs>
     
-    <!-- Create Folder Modal -->
-    <div class="modal fade" id="AddFolder" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Edit Folder Modal -->
+    <div class="modal fade" id="editFolderModal" tabindex="-1" role="dialog" aria-labelledby="editFolderModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editFolderModalLabel">Edit Folder</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="editFolderForm" id="editFolderForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Folder Name</label>
+                                    <input type="text" class="form-control" [(ngModel)]="folderName"
+                                        placeholder="Folder Name" name="folderName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary" (click)="editFolder()" >Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Material Modal -->
+    <div class="modal fade" id="editMaterialModal" tabindex="-1" role="dialog" aria-labelledby="editMaterialModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLong">Create a Folder</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+                <h5 class="modal-title" id="editMaterialModalLabel">Edit Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-            Folder name
-            <input type="text" class="form-control" [(ngModel)]="folderName">
+                <form [formGroup]="editMaterialForm"  name="editMaterialForm" id="editMaterialForm" (ngSubmit)="editMaterial()">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Material Name</label>
+                                <input type="text" class="form-control"  formControlName="name"
+                                    placeholder="Material Name" name="materialName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Material Type</label>
+                                <select class="form-control"  formControlName="type" name="materialType">
+                                    <option value="mp4">Mp4</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="pptx">pptx</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- edit is downloadable option -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Downloadable</label>
+                                <select class="form-control"  formControlName="isDownloadable2" name="isDownloadable2">
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" >Update</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" (click) = "createFolder()" data-dismiss="modal">Create</button>
-            </div>
-        </div>
         </div>
     </div>
-
+</div>
 </div>
 
 

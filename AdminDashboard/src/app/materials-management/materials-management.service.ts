@@ -10,67 +10,18 @@ import {Observable} from 'rxjs';
 })
 export class MaterialsManagementService {
   tempArr: string[] = [];
-  getListOfFileIds(files: File[]): Observable<any>{
-    this.tempArr = [];
-    let fileNames = [];
-    for (let i = 0; i < files.length; i++) {
-      fileNames.push(files[i].name);
-    }
-    console.log(fileNames)
-    var fNames = JSON.stringify(fileNames);
-    var i=0;
-    const request = new HttpRequest('POST', 'http://localhost:3000/getListOfMaterials?fileNames=' + fileNames, {
-      reportProgress: true,
-      responseType: 'json'
-    });
-    return this.httpclient.request(request)
-      // let p = fetch("http://localhost:3000/getListOfMaterials?fileNames="+fileNames, {
-      //   method: 'POST',
-      //   }).then(
-      //     response => response.text()
-      //   )
-      //   .then(result => {
-      //     console.log(result)
-      //     var j = JSON.parse(result)
-      //     if(result){
-      //       for(var x=0; x< j.length; x++){
-      //         this.tempArr.push(j[x]._id)
-      //       }
-      //       console.log(this.tempArr)
-      //     }
-      //     return this.tempArr;
-      //   })
-  }
+
 
   constructor(private httpclient: HttpClient) { }
-  uploadFileToServer(file:File):Observable<HttpEvent<any>>{
-    const f = new FormData();
-    f.append("Materials", file);
-    const request = new HttpRequest('POST', 'http://localhost:3000/uploadMaterialContent', f, {
-      reportProgress: true,
-      responseType: 'json'
-    });
-    return this.httpclient.request(request)
-  }
+ 
   getMaterials():Observable<any>{
     return this.httpclient.get('http://localhost:3000/getAllMaterials');
   }
 
-  createFolder(folderName:string):any{
-    // let req = 'http://localhost:3000/createFolder?' + 
-    // "name="+ folderName + "&parent=root";
-    // console.log(req)
-    // return this.httpclient.post(req, null);
-
-    var requestOptions = {
-      method: 'POST',
-    };
-    
-    fetch("http://localhost:3000/createFolder?name="+folderName+"&parent=root", requestOptions)
-      .then(response => response.text())
-      .then(result => {return result});
-
-    }
+  createFolder(folderName:string):Observable<any>{
+    console.log(folderName)
+    return this.httpclient.post('http://localhost:3000/createFolder?folderName='+folderName, {})
+  }
 
   getFolders():Observable<any>{
     return this.httpclient.get('http://localhost:3000/getAllFolders');
@@ -90,27 +41,48 @@ export class MaterialsManagementService {
     }
 
   // delete a material
-  deleteMaterial(materialId:number | undefined):any{
-    var requestOptions = {
-      method: 'DELETE',
-    };
-
-    if(materialId){
-        fetch("http://localhost:3000/deleteMaterial?materialId="+materialId, requestOptions)
-          .then(response => response.text())
-          .then(result => {return result});
-      }
-    }
-
-  uploadFileToServerOnFolder(fileId: number | undefined, folderId:number | undefined):any{
-    fetch("http://localhost:3000/uploadFileToServerOnFolder?fileId="+fileId+"&folderId="+folderId, {
-      method: 'POST',
-    })
-    .then(response =>response.text())
-    .then(result => {return result})
+  deleteMaterial(materialId:number | undefined, folderId: number | undefined):Observable<any>{
+    return this.httpclient.post("http://localhost:3000/deleteFileFromFolder?materialId="+materialId+"&folderId="+folderId, {}) 
   }
+    
+
+    // updated correct - add material to folder
+  uploadFile(files :File[], folderId: number): Observable<any>{
+    let f = new FormData();
+    for(let fx of files){
+      f.append("Materials", fx);
+    }
+    return this.httpclient.post('http://localhost:3000/uploadMaterialContent?folderId='+folderId, f)
+  }
+
+  // edit a folder
+  editFolder(folderId: number | undefined, folderName: string):Observable<any>{
+    return this.httpclient.post('http://localhost:3000/editFolder?folderId='+folderId+"&folderName="+folderName, {})
+  }
+
+  //edit a material
+  editMaterial(material: any, materialId: number | undefined, folderId: number | undefined, materialToEdit: any):Observable<any>{
+    var obj = {
+      _id: "", 
+      name: "",
+      path: Boolean,
+      type: "",
+      isDownloadable: ""
+    }
+  if(material.name){obj.name=material.name}
+  else{obj.name=materialToEdit.name}
+  if(material.type){obj.type=material.type}
+  else{obj.type=materialToEdit.type}
+  if(material.isDownloadable!=null){obj.isDownloadable=material.isDownloadable}
+  else{obj.isDownloadable=materialToEdit.isDownloadable}
+
+  obj.path = materialToEdit.path;
+  obj._id = materialToEdit._id;
+
+    return this.httpclient.post('http://localhost:3000/editMaterial?materialId='+materialId+"&folderId="+folderId, obj)
+  }
+
+  
 }
-function then(arg0: () => string[]) {
-  throw new Error('Function not implemented.');
-}
+
 
