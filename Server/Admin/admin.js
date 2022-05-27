@@ -24,6 +24,7 @@ router.use(
         extended: true,
     })
 );
+router.use(express.json());
 
 router.get("/", function (req, res){
     res.send("In Admin")
@@ -189,14 +190,6 @@ router.get("/enrolledCourseLearners/courseId/:courseId", function(req, res){
                                     ],
                                 },
                             },},
-                            {
-                                $group: {
-                                    _id: '$_id',
-                                    courses: {
-                                        $first: '$courses'
-                                    },
-                                },
-                            },
                         ],
                         as: "learnerDetails"
                     }
@@ -438,12 +431,18 @@ router.get("/allLearners", function (req, res){
 })
 
 //to be used to add enroll or un-enroll a learner from a course
-router.get("/updateLearner", function(req, res){
+router.post("/updateLearner", function(req, res){
     mongoClient.connect(function (err, client) {
         const db = client.db(dbName);
         let docId=new ObjectId(req.body._id)
         console.log(docId)
         delete req.body['_id']
+        for (let i=0; i<req.body.courses.length; i++){
+            req.body.courses[i].courseId=new ObjectId(req.body.courses[i].courseId)
+            for (let j=0; j<req.body.courses[i].assessmentsDone.length; j++){
+                req.body.courses[i].assessmentsDone[j].assessmentID=new ObjectId(req.body.courses[i].assessmentsDone[j].assessmentID)
+            }
+        }
         db.collection("learner")
             .updateOne({
                     _id: docId
@@ -459,12 +458,18 @@ router.get("/updateLearner", function(req, res){
 })
 
 //to be used to edit something in course or add/remove material or assignment
-router.get("/updateCourse", function(req, res){
+router.post("/updateCourse", function(req, res){
     mongoClient.connect(function (err, client) {
         const db = client.db(dbName);
         let docId=new ObjectId(req.body._id)
-        console.log(docId)
+        console.log(req.body._id)
         delete req.body['_id']
+        for (let i=0; i<req.body.assessments.length; i++){
+            req.body.assessments[i].assessmentID=new ObjectId(req.body.assessments[i].assessmentID)
+        }
+        for (let i=0; i<req.body.materials.length; i++){
+            req.body.materials[i]=new ObjectId(req.body.materials[i])
+        }
         db.collection("course")
             .updateOne({
                     _id: docId
@@ -486,6 +491,87 @@ router.get("/getCourse/:courseId", function(req, res){
         const db = client.db(dbName);
         console.log(docId)
         db.collection("course").find({_id:docId})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/allMaterials", function(req, res){
+    console.log("Getting all materials")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("material").find({})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/getMaterial/:materialId", function(req, res){
+    console.log("Getting material ", req.params.materialId)
+    let docId=new ObjectId(req.params.materialId)
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        console.log(docId)
+        db.collection("material").find({_id:docId})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/allAssessments", function(req,res){
+    console.log("Getting all assessments")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("assessment").find({})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/getAssessment/:assessmentId", function(req, res){
+    console.log("Getting material ", req.params.assessmentId)
+    let docId=new ObjectId(req.params.assessmentId)
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        console.log(docId)
+        db.collection("assessment").find({_id:docId})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/getLearner/:learnerId", function(req, res){
+    console.log("Getting learner ", req.params.learnerId)
+    let docId=new ObjectId(req.params.learnerId)
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        console.log(docId)
+        db.collection("learner").find({_id:docId})
             .toArray(
                 function(err, info) {
                     if (err) throw err;
