@@ -8,7 +8,7 @@ const MongoClient = require("mongodb").MongoClient;
   // Connection url
   const url = "mongodb://localhost:27017";
   // Database Name
-  const dbName = "brillantPro";
+  const dbName = "brilliantPro";
   
   // Connect using MongoClient
   const mongoClient = new MongoClient(url);
@@ -26,7 +26,7 @@ const { ObjectId } = require('bson');
   mongoClient.connect(function (err, client) {
     const db = client.db(dbName);
    db.collection("course").find({'_id':ObjectId(req.params.id)})
-.project({"name":1})
+.project({"name":1,endDate:1,startDate:1,"assessments":1})
        .toArray(function (err, data) {
       if (err) throw err;
       console.log(data);
@@ -145,11 +145,23 @@ app.post('/UpdateCourseProgress/:courseId/learner/:learner/progress/:progress',a
     })
     
 })
-// get assessment
+// get assessment from id
+app.get('/getAssessment/:id', function (req, res) {
+    console.log("Got a GET request assessment ="+req.params.id);
 
+// var data={}
+mongoClient.connect(function (err, client) {
+const db = client.db(dbName);
+db.collection("assessment").find({'_id':ObjectId(req.params.id)})
+// .project({"name":1,endDate:1,startDate:1,"assessments":1})
+  .toArray(function (err, data) {
+ if (err) throw err;
+ console.log(data);
+ res.send(data);
+})
+})
 
-
-
+})
 
   module.exports = app
 

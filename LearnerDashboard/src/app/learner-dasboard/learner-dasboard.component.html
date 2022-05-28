@@ -4,6 +4,10 @@
 <div class="glasscard">
     <div class="nav">
         <p>NAVBAR</p>
+        <nav>
+            <a routerLink="">Dashboard<br></a>
+
+        </nav>
 
     </div>
     <!-- <router-outlet></router-outlet> -->
@@ -13,12 +17,16 @@
             <div class="completed p-2 bd-highlight">
                 <h4>Completed Courses</h4>
               
-                <a *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name}"  >{{c.name}}<br></a>
+                <a *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name, courseStart:completeCoursesNames[i].startDate, courseEnd:completeCoursesNames[i].endDate}"  >{{c.name}}<br></a>
               
             </div>
-            <div class="unfinished p-2 bd-highlight">
+            <div class="card unfinished p-2 bd-highlight">
+                <div class="card-body">
                 <h4>Unfinished Courses</h4>
-                <h6 *ngFor="let i of unfinishedCoursesNames">{{i.name}}</h6>
+                <a *ngFor="let i of unfinishedCoursesNames; let j=index;" routerLink="material/{{username}}"  [state]="{course:unfinishedCourses[0][j] , courseDetails:i}"  >{{i.name}}<br></a>
+
+                <!-- <h6  *ngFor="let i of unfinishedCoursesNames">{{i.name}}</h6> -->
+            </div>
             </div>
 
    

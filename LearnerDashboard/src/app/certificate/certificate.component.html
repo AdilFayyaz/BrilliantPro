@@ -5,24 +5,22 @@
     <div class="glasscard">
         <div class="nav">
             <p>NAVBAR</p>
+            <nav>
+                <a routerLink="">Dashboard<br></a>
+    
+            </nav>
     
         </div>
         <!-- <router-outlet></router-outlet> -->
     
         <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
             
-                <div class="completed p-2 bd-highlight">
-                    <h1>certificatee!</h1>
-                    <h2>Awarded to {{name}}!</h2>
-                    <h3>for course {{courseName}}</h3>
-                    <!-- <h4>Completed Courses</h4>
+                <div class="completed p-2 bd-highlight justify-content-center">
+                    <h1>Certificate</h1>
+                    <h2>Awarded to: {{name}}!</h2>
+                    <h3>for the of course:{{courseName}}</h3>
+                    <h4>from : {{courseStart}} to : {{courseEnd}}</h4>
                   
-                    <a *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name}"  >{{c.name}}<br></a>
-                  
-                </div>
-                <div class="unfinished p-2 bd-highlight">
-                    <h4>Unfinished Courses</h4>
-                    <h6 *ngFor="let i of unfinishedCoursesNames">{{i.name}}</h6> -->
                 </div>
     
        
