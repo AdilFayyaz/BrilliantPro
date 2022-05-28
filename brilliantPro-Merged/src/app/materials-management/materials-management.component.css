@@ -1,0 +1,24 @@
+mat-icon{
+    vertical-align: middle;
+}
+.mainBox{
+    background-color: rgb(230, 226, 220);
+    width: 80%;
+    height: auto;
+    /* margin: auto; */
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: auto;
+}
+#addIcon{
+    margin-bottom: 1px;
+}
+#tabsView{
+    background-color: rgb(253, 247, 240);
+    width: 75%;
+    margin-top:100px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:auto;
+}
