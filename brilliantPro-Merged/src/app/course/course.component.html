@@ -1,3 +1,4 @@
+<script src="course.component.ts"></script>
 <div class="row scrolling-wrapper">
   <div *ngFor="let course of courses; let index=index" class="col-3 card h-auto" style="width: 15rem;">
     <div class="card-header" >
@@ -12,9 +13,14 @@
     </div>
     <div class="card-footer" style="background-color: white">
       <div class="btn-group">
-        <a href="#" class="btn btn-outline-info" >Details</a>
-        <a href="#" class="btn btn-outline-danger">Delete</a>
+        <a  class="btn btn-outline-info" (click)="open(course)">Details</a>
+        <a  class="btn btn-outline-danger" (click)="delete(course, index)">Delete</a>
       </div>
     </div>
   </div>
 </div>
+<button class="btn  rounded addNew btn-primary" (click)="new()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+  </svg>
+</button>
