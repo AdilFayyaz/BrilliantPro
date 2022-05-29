@@ -175,6 +175,45 @@ res.send(data);
 
 })
 
+
+// 
+// update done assessments of learner
+router.post('/UpdateAssignmentsDone/:courseId/learner/:learner',async function (req, res) {
+    console.log("Got a GET request assessment done update ="+JSON.stringify(req.body.done)," ", req.params.courseId," ",req.params.learner);
+    mongoClient.connect(function (err, client) {
+       const db = client.db(dbName);
+      db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.params.courseId},{$push: {"courses.$.assessmentsDone":req.body.done}}).catch(error => console.log('errror', error));
+      res.send("update done!")
+    })
+    
+})
+// get done assessments of learner of a particular course
+router.get('/getAssignmentsDone/:courseId/learner/:learner',async function (req, res) {
+    console.log("Got a GET request progess ="+req.params.courseId);
+    mongoClient.connect(function (err, client) {
+       const db = client.db(dbName);
+      db.collection("learner").aggregate([{$match:{'username':req.params.learner}}, 
+      {
+                         $project: {
+                             "courses": {
+                                 $filter: {
+                                     input: "$courses",
+                                     as: "course",
+                                     cond: {$eq: ["$$course.courseId", req.params.courseId]}
+                                 }
+                             },
+                         }
+                     }
+    ])
+    .project( {"username":0,"password":0 , _id:0})
+          .toArray(function (err, data) {
+         if (err) throw err;
+         console.log(data[0].courses[0].assessmentsDone);
+         res.send(data[0].courses[0].assessmentsDone);
+       })
+    })
+    
+    })
 router.use(express.json());
 
 module.exports=router

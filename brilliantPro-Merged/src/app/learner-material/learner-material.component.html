@@ -26,7 +26,7 @@
                       
                     </p>
                     <h5>Assessments for the course:</h5>
-                     <a class="btn btn-outline-light" routerLink="assessment" [state]="{assessments:assessmentsDetails[ai][0] , weightage:assessments[ai].weightage}" *ngFor="let a of assessmentsDetails; let ai=index;">{{a[0].name}}</a>
+                     <a class="btn btn-outline-light" routerLink="assessment" [state]="{assessments:assessmentsDetails[ai][0] , weightage:assessments[ai].weightage, courseId:courseId}" *ngFor="let a of assessmentsDetails; let ai=index;"[class.disabled]="isdisable[ai].val">{{a[0].name}}</a>
             
                  
                 </div>

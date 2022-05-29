@@ -20,6 +20,7 @@ istimeUp:boolean=false;
 istimeUp2:boolean=false;
 correctCount:number=0;
 incorrectCount:number=0;
+courseId:number=0;
  map = new Map<string, string>();
 
   constructor(private route: ActivatedRoute,config: NgbCarouselConfig) {
@@ -28,6 +29,7 @@ incorrectCount:number=0;
     this.time=this.assessments.time*60;
     this.minPassing=this.assessments.minPassing;
     this.weightage=history.state.weightage
+    this.courseId=history.state.courseId
     console.log("assessments received ",this.assessments)
 
     // customize default values of carousels used by this component tree
@@ -113,5 +115,35 @@ incorrectCount:number=0;
     else{
       this.grade="F"
     }
+    this.updateDB()
+  }
+  updateDB():void{
+    console.log("name ",this.username)
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+      "done": {
+        "assessmentID":this.assessments._id,
+        "grade": this.grade,
+        "passValue": this.passValue,
+        "quesSummary": this.questionSummary,
+        "correctQ": this.correctCount,
+        "incorrectQ": this.incorrectCount
+      }
+    });
+    
+    var requestOptions = {}
+    requestOptions={
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    fetch("http://127.0.0.1:3000/learner/UpdateAssignmentsDone/"+this.courseId+"/learner/"+this.username, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('errror', error));
   }
 }
