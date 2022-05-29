@@ -7,17 +7,17 @@
     
         <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
             
-                <div class=" card completed p-2 bd-highlight">
+                <div class=" card completed p-2 bd-highlight" >
                     <div class="card-body">
                     <h4>Completed Courses</h4>
                   
-                    <a  class="btn btn-outline-danger" *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name, courseStart:completeCoursesNames[i].startDate, courseEnd:completeCoursesNames[i].endDate}"  >{{c.name}}<br></a>
+                    <a  class="btn btn-outline-warning" *ngFor="let c of completeCoursesNames; let i=index;" routerLink="certificate/{{username}}"  [state]="{course:completeCourses[0][i] , courseName:completeCoursesNames[i].name, courseStart:completeCoursesNames[i].startDate, courseEnd:completeCoursesNames[i].endDate}"  >{{c.name}}</a>
                      </div>
                 </div>
                 <div class="card unfinished p-2 bd-highlight">
                     <div class="card-body">
                     <h4>Unfinished Courses</h4>
-                    <a  class="btn btn-outline-info"  routerLink="material/{{username}}"  [state]="{course:unfinishedCourses[0][j] , courseDetails:i}" *ngFor="let i of unfinishedCoursesNames; let j=index;"  >{{i.name}}<br></a>
+                    <a  class="btn btn-outline-dark"  routerLink="material/{{username}}"  [state]="{course:unfinishedCourses[0][j] , courseDetails:i}" *ngFor="let i of unfinishedCoursesNames; let j=index;"  >{{i.name}}<br></a>
     
                     <!-- <h6  *ngFor="let i of unfinishedCoursesNames">{{i.name}}</h6> -->
                      </div>

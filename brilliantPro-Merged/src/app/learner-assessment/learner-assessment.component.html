@@ -1,39 +1,102 @@
-<!-- <ngb-carousel *ngIf="images">
+<ngb-carousel *ngIf="!istimeUp">
+  <!-- <form #myForm="ngForm" (submit)="templateForm(myForm.value)" novalidate> -->
+<!-- <div> -->
     <ng-template ngbSlide>
-      <div class="picsum-img-wrapper">
-        <img [src]="images[0]" alt="Random first slide">
+      
+      <div class="picsum-img-wrapper  carousel1" >
+
+        <div class="sample card-body" >
+          <h1 class="card-title d-flex justify-content-center align-items-center">
+            This is {{assessments.name}}<br>
+            Are You Ready?<br>
+            You have {{assessments.time}} Minutes<br>
+            Let's Start!
+          </h1>
+        </div>
       </div>
       <div class="carousel-caption">
-        <h3>10 seconds between slides...</h3>
-        <p>This carousel uses customized default values.</p>
+        <h3>Move Right To Start</h3>
+      </div>
+    </ng-template>
+    <ng-template ngbSlide *ngFor="let a of assessments.questions; let i=index;">
+      <div class="picsum-img-wrapper carousel1" >
+
+          <!-- <div class="custom-control custom-radio"> -->
+
+            <div class="sample card-body">
+              <h3 class="card-title d-flex justify-content-center align-items-center">
+           {{a.question}}<br>
+              </h3>
+               
+               <div style="margin-left:10vw ;">
+                  <b>A.</b> <input class="form-check-input" type="radio" id="{{a.option1}}" name="{{a.question}}" value="A" ngModel (change)="templateForm(a.question,'A')">
+                  <label class="form-check-label" for="{{a.option1}}">{{a.option1}}</label><br>
+                  <b>B.</b> <input class="form-check-input" type="radio" id="{{a.option2}}" name="{{a.question}}" value="B" ngModel (change)="templateForm(a.question,'B')">
+                  <label class="form-check-label" for="{{a.option2}}">{{a.option2}}</label><br>
+                  <b>C.</b> <input class="form-check-input" type="radio" id="{{a.option3}}" name="{{a.question}}" value="C" ngModel   (change)="templateForm(a.question,'C')">
+                  <label class="form-check-label" for="{{a.option3}}">{{a.option3}}</label><br>
+                  <b>D.</b> <input class="form-check-input" type="radio" id="{{a.option4}}" name="{{a.question}}" value="D" ngModel  (change)="templateForm(a.question,'D')">
+                  <label class="form-check-label" for="{{a.option4}}">{{a.option4}}</label><br>
+                
+                </div>  
+            </div>
+        <!-- </div> -->
+        <!-- <button style="margin-left: 120px;" type="submit" class="btn btn-danger btn-lg btn-block">click</button> -->
+      
+      </div>
+      <div class="carousel-caption">
+        <h3>Time Left</h3>
+        <cd-timer [startTime]=time [countdown]="true" format="hms" (onComplete)="testFinish()"></cd-timer>
       </div>
     </ng-template>
     <ng-template ngbSlide>
-      <div class="picsum-img-wrapper">
-        <img [src]="images[1]" alt="Random second slide">
+      <div class="picsum-img-wrapper  carousel1" >
+
+        <div class="sample card-body d-flex align-items-center justify-content-center">
+          <h1 class="card-title d-flex justify-content-center align-items-center">
+          End Test?  <br>   
+          </h1><br>
+          <input type="button" class="btn btn-success" value="END TEST" (click)="testFinish()">
+        </div>
       </div>
       <div class="carousel-caption">
-        <h3>No mouse events...</h3>
-        <p>This carousel doesn't pause or resume on mouse events</p>
+        <h3>You Still Have Time Left</h3>
+        <cd-timer [startTime]=time [countdown]="true" format="hms" (onComplete)="testFinish()"></cd-timer>
       </div>
+   
     </ng-template>
-    <ng-template ngbSlide>
-      <div class="picsum-img-wrapper">
-        <img [src]="images[2]"  alt="Random third slide">
-      </div>
-      <div class="carousel-caption">
-        <h3>No keyboard...</h3>
-        <p>This carousel uses customized default values.</p>
-      </div>
-    </ng-template>
-    <ng-template ngbSlide>
-      <div class="picsum-img-wrapper">
-        <img [src]="images[3]" alt="Random fourth slide">
-      </div>
-      <div class="carousel-caption">
-        <h3>And no wrap after last slide.</h3>
-        <p>This carousel uses customized default values.</p>
-      </div>
-    </ng-template>
-  </ngb-carousel> -->
-  <ngb-progressbar type="info" [value]="10" [striped]="true" [animated]="true" ><i>hello</i></ngb-progressbar> 
+  <!-- </div>
+  </form> -->
+  
+  </ngb-carousel>
+
+  <div class="picsum-img-wrapper  carousel1" *ngIf="istimeUp" >
+
+    <div class="sample2 card-body">
+      <h1 class="card-title d-flex justify-content-center align-items-center">
+      Test Summary
+      </h1>
+      <h5> Correct Answers:  <b>{{correctCount}}</b><br>
+        InCorrect Answers:  <b>{{incorrectCount}}</b><br>
+      
+        Gained weightage:  <b>{{weightedScore | number:'1.0-2'}} out of {{weightage}}</b><br>
+        Test Status:  <b>{{passValueStr}}</b><br>
+        Grade:  <b>{{grade}}</b><br>
+        Summary:
+       
+      </h5>
+     <h6 style="white-space: pre;"> <b>{{questionSummary}}</b><br></h6>
+    </div>
+  </div>
+
+  <!-- <div class="picsum-img-wrapper  carousel1"   *ngIf="istimeUp" >
+
+    <div class="sample2 card-body">
+      <h1 class="card-title d-flex justify-content-center align-items-center">
+      Time Up!!
+      </h1>
+      <h5> Test Failed!
+      </h5>
+    </div>
+  </div> -->
+  <!-- <ngb-progressbar type="info" [value]="10" [striped]="true" [animated]="true" ><i>hello</i></ngb-progressbar>  -->

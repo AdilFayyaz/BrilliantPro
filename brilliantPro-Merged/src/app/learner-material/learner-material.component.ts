@@ -22,6 +22,7 @@ constructor(private route: ActivatedRoute) {
  for(let i=0;i<this.assessments.length;i++){
   this.getAssessments(this.assessments[i].assessmentID)
  }
+ console.log("sendinggg ",this.assessments)
   }
 
   ngOnInit(): void {

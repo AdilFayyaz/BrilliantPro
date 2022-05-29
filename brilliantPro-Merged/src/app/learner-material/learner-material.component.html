@@ -1,7 +1,7 @@
 <div>
     <!-- <img src="imagesbg.jpg" id="bg" alt=""> -->
     
-    <div class="glasscard">
+    <!-- <div class="glasscard"> -->
     
     
         <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
@@ -17,18 +17,22 @@
                              
                             </ng-template>
                             <ng-template #elseBlock>
-                           <a href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a>
+                           <a class="btn btn-danger" href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a>
 
                             </ng-template>
+
                             <!-- <a href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a> -->
-                       <br> <a routerLink="assessment" *ngFor="let a of assessmentsDetails; let ai=index;">{{a[0].name}}</a>
-               
+                       <br>
+                      
                     </p>
+                    <h5>Assessments for the course:</h5>
+                     <a class="btn btn-outline-light" routerLink="assessment" [state]="{assessments:assessmentsDetails[ai][0] , weightage:assessments[ai].weightage}" *ngFor="let a of assessmentsDetails; let ai=index;">{{a[0].name}}</a>
+            
                  
                 </div>
     
        
     
         </main>
-    </div>
+    <!-- </div> -->
     </div>
