@@ -5,7 +5,7 @@ import { catchError, retry } from 'rxjs/operators';
 import {CoursesInterface} from "../interfaces/coursesInterface";
 import {CourseLearnerInterface} from "../interfaces/CourseLearnerInterface";
 import {CourseDBInterface} from "../interfaces/CourseDBInterface";
-import {MaterialInterface} from "../interfaces/MaterialInterface";
+import {FolderInterface, MaterialInterface} from "../interfaces/MaterialInterface";
 import {AssessmentInterface} from "../interfaces/AssessmentInterface";
 import {LearnerInterface} from "../interfaces/LearnerInterface";
 
@@ -43,6 +43,9 @@ export class CoursesService {
   getEnrolledInCourse(id:string){
     return this.http.get<any>("http://localhost:3000/admin/enrolledCourseLearners/courseId/"+id);
   }
+  getAllInCourse(id:string){
+    return this.http.get<any>("http://localhost:3000/admin/allCourseLearners/courseId/"+id);
+  }
   getPassedInCourse(id:string){
     return this.http.get<any>("http://localhost:3000/admin/passCourseLearners/courseId/"+id);
   }
@@ -59,10 +62,10 @@ export class CoursesService {
     return this.http.get<CourseDBInterface[]>("http://localhost:3000/admin/getCourse/"+id);
   }
   getAllMaterials(){
-    return this.http.get<MaterialInterface[]>("http://localhost:3000/admin/allMaterials");
+    return this.http.get<FolderInterface[]>("http://localhost:3000/admin/allFolders");
   }
   getMaterialInformation(id:string){
-    return this.http.get<MaterialInterface[]>("http://localhost:3000/admin/getMaterial/"+id);
+    return this.http.get<FolderInterface[]>("http://localhost:3000/admin/getFolderMaterial/"+id);
   }
   getAllAssessments(){
     return this.http.get<AssessmentInterface[]>("http://localhost:3000/admin/allAssessments");
@@ -72,6 +75,20 @@ export class CoursesService {
   }
   updateCourse(c:CourseDBInterface){
     return this.http.post("http://localhost:3000/admin/updateCourse", c);
+  }
+
+  uploadImage(image:File){
+    const formData = new FormData();
+    formData.append('image', image);
+    return this.http.post("http://localhost:3000/admin/uploadImage", formData,  {responseType: 'text' });
+  }
+
+  newCourse(c:CourseDBInterface){
+    return this.http.post("http://localhost:3000/admin/newCourse", c);
+  }
+
+  deleteCourse(c:CourseDBInterface){
+    return this.http.post("http://localhost:3000/admin/deleteCourse", c);
   }
 
 }

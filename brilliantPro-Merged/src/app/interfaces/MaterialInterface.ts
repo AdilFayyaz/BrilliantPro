@@ -6,3 +6,7 @@ export interface MaterialInterface{
   "path":string
 }
 
+export interface FolderInterface{
+  "materials":MaterialInterface[]
+}
+
