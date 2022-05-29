@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal, NgbDate, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {AssessmentInterface} from "../interfaces/AssessmentInterface";
-import {MaterialInterface} from "../interfaces/MaterialInterface";
+import {FolderInterface, MaterialInterface} from "../interfaces/MaterialInterface";
 import {AssessmentInCourse, CourseDBInterface} from "../interfaces/CourseDBInterface";
 import {CoursesService} from "../services/courses.service";
 import {CourseInLearner, LearnerInterface} from "../interfaces/LearnerInterface";
@@ -26,6 +26,7 @@ export class CourseDetailsComponent implements OnInit {
   active=1;
   allAssessments:AssessmentInterface[]=[]
   allMaterials:MaterialInterface[]=[]
+
   courseAssessments:AssessmentInterface[]=[]
   courseMaterials:MaterialInterface[]=[]
   newAssessment=false
@@ -38,6 +39,7 @@ export class CourseDetailsComponent implements OnInit {
   enrolledLearners:LearnerInterface[]=[]
   allLearners:LearnerInterface[]=[]
   selectedLearner:LearnerInterface={_id: "", certificates: [], courses: [], password: "", username: "Select Learner"}
+  selectedFile: any;
   tempSdate:NgbDate={
     day: 1, month: 2, year: 2020, after(other?: NgbDateStruct | null): boolean {
       return false;
@@ -68,6 +70,9 @@ export class CourseDetailsComponent implements OnInit {
   a4:Alert={type:"success", message:"Saved!"}
   a4Show=false
 
+  a5:Alert={type:"success", message:"Image Uploaded!"}
+  a5Show=false
+
   constructor(public activeModal: NgbActiveModal, private courseService:CoursesService, private learnerService:LearnerService) {}
 
   close(a:string) {
@@ -79,6 +84,8 @@ export class CourseDetailsComponent implements OnInit {
       this.a3Show=false
     if (a=="a4")
       this.a4Show=false
+    if (a=="a5")
+      this.a5Show=false
   }
 
   ngOnInit(): void {
@@ -120,8 +127,8 @@ export class CourseDetailsComponent implements OnInit {
     this.courseMaterials=[]
     for (let i=0; i<this.course.materials.length; i++){
       this.courseService.getMaterialInformation(this.course.materials[i])
-        .subscribe((data:MaterialInterface[])=>{
-          this.courseMaterials.push(data[0])
+        .subscribe((data:FolderInterface[])=>{
+          this.courseMaterials.push(data[0].materials[0])
         })
     }
   }
@@ -147,8 +154,12 @@ export class CourseDetailsComponent implements OnInit {
   getAllMaterials(){
     this.allMaterials=[]
     this.courseService.getAllMaterials()
-      .subscribe((data:MaterialInterface[])=>{
-        this.allMaterials=data;
+      .subscribe((data:FolderInterface[])=>{
+        for (let i=0; i<data.length; i++){
+          for (let j=0; j<data[i].materials.length; j++){
+            this.allMaterials.push(data[i].materials[j])
+          }
+        }
       })
   }
 
@@ -298,6 +309,23 @@ export class CourseDetailsComponent implements OnInit {
      }
    }
   }
+
+  fileChosen(event: any){
+    this.selectedFile=event.target.files[0];
+  }
+
+  uploadImage(){
+    //if called then call the uploading thing and when that is done, then change path of
+    //course.image to the new one
+
+    this.courseService.uploadImage(this.selectedFile).subscribe((data:any)=>{
+      console.log("Image Uploaded")
+      this.course.image=this.selectedFile.name;
+      this.a5Show=true;
+    })
+  }
+
+
 
 
 

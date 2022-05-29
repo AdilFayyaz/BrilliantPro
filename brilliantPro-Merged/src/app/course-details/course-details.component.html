@@ -102,6 +102,7 @@
         </h5>
         <hr>
         <ngb-alert *ngIf="a4Show" [type]="a4.type" (closed)="close('a4')">{{ a4.message }}</ngb-alert>
+        <ngb-alert *ngIf="a5Show" [type]="a5.type" (closed)="close('a5')">{{ a5.message }}</ngb-alert>
         <span class="form-label"> Name: </span>
         <input type="text" class="input-group-text" [(ngModel)]="course.name">
 
@@ -125,6 +126,13 @@
              <button (click)="endDate.toggle()" class="btn btn-primary">Choose</button>
           </span>
         </div>
+          <div>
+            <label>Change Image</label>
+            <input type="file" name="image" (change)="fileChosen($event)" required/>
+          </div>
+          <div>
+            <input type="submit" value="Upload" (click)="uploadImage()" />
+          </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-success" (click)="updateCourse('dates')" >Save</button>
