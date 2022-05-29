@@ -1,11 +1,21 @@
 var express=require("express")
 var router = express.Router()
-
+var multer  = require('multer')
 
 const {ObjectID: ObjectId} = require("mongodb");
 const cors = require("cors");
 
 router.use(cors())
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../FrontEnd/src/assets')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+var upload = multer({ storage: storage })
 
 
 // Connect using a MongoClient instance
@@ -74,15 +84,14 @@ router.get("/totalCourses", function (req, response){
 
 //get total number of materials
 router.get("/totalMaterials", function (req, response){
-    mongoClient.connect(function (err, client) {
+
+    mongoClient.connect(async function (err, client) {
         const db = client.db(dbName);
-        db.listCollections({name: 'material'})
+        let query=[{'$group': {'_id': '_id', 'ToTalValue': {'$sum': {'$size': '$materials'}}}}]
+        db.collection("folder").aggregate(query)
             .next(function(err, info) {
                 if (info) {
-                    db.collection("material").count(function (err, count) {
-                        if (err) throw err;
-                        response.send(count.toString())
-                    });
+                    response.send(info.ToTalValue.toString())
                 }
                 else{
                     response.send("0")
@@ -119,8 +128,8 @@ router.get("/totalEnrolled", function (req, res){
               console.log(i)
             for (var j=0; j<items[i]._id.length; j++){
                 // console.log(j)
-                console.log(items[i]._id[j])
-                mySet1.add(items[i]._id[j])
+                console.log(items[i]._id[j].toString())
+                    mySet1.add(items[i]._id[j].toString())
               }
           }
           console.log(mySet1)
@@ -384,6 +393,42 @@ router.get("/failCourseLearners/courseId/:courseId", function(req, res){
     });
 })
 
+router.get("/allCourseLearners/courseId/:courseId", function(req, res){
+    var courseId=req.params.courseId
+    mongoClient.connect(async function (err, client) {
+        const db = client.db(dbName);
+        var query = [
+            {$match:{_id : ObjectId(courseId)}},
+            {
+                $lookup:
+                    {
+                        from: "learner",
+                        let: {courseId:"$_id"},
+                        pipeline:[
+                            {
+                                $unwind: '$courses',
+                            },
+                            {$match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ['$courses.courseId', '$$courseId']},
+                                        ],
+                                    },
+                                },},
+                        ],
+                        as: "learnerDetails"
+                    }
+            }
+        ]
+        db.collection("course").aggregate(query)
+            .toArray(function (err, items) {
+                if (err) throw err;
+                console.log(items);
+                res.send(items)
+            });
+    });
+})
+
 router.get("/allCourses", function (req, res){
     console.log("Getting all courses")
     mongoClient.connect(function (err, client) {
@@ -501,38 +546,6 @@ router.get("/getCourse/:courseId", function(req, res){
     });
 })
 
-router.get("/allMaterials", function(req, res){
-    console.log("Getting all materials")
-    mongoClient.connect(function (err, client) {
-        const db = client.db(dbName);
-        db.collection("material").find({})
-            .toArray(
-                function(err, info) {
-                    if (err) throw err;
-                    console.log(info)
-                    res.send(info)
-                });
-
-    });
-})
-
-router.get("/getMaterial/:materialId", function(req, res){
-    console.log("Getting material ", req.params.materialId)
-    let docId=new ObjectId(req.params.materialId)
-    mongoClient.connect(function (err, client) {
-        const db = client.db(dbName);
-        console.log(docId)
-        db.collection("material").find({_id:docId})
-            .toArray(
-                function(err, info) {
-                    if (err) throw err;
-                    console.log(info)
-                    res.send(info)
-                });
-
-    });
-})
-
 router.get("/allAssessments", function(req,res){
     console.log("Getting all assessments")
     mongoClient.connect(function (err, client) {
@@ -581,6 +594,95 @@ router.get("/getLearner/:learnerId", function(req, res){
 
     });
 })
+
+router.get("/allFolders", function(req, res){
+    console.log("Getting all materials from folders ")
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("folder").find({})
+            .project({"_id":0, "materials":1})
+            .toArray(
+                function(err, info) {
+                    if (err) throw err;
+                    console.log(info)
+                    res.send(info)
+                });
+
+    });
+})
+
+router.get("/getFolderMaterial/:materialId", function(req, res){
+    let docId=new ObjectId(req.params.materialId)
+    mongoClient.connect(async function (err, client) {
+        const db = client.db(dbName);
+        var query = [
+            {$match:{"materials._id" : docId}},
+            {
+                $project: {
+                    "materials": {
+                        $filter: {
+                            input: "$materials",
+                            as: "material",
+                            cond: {$eq: ["$$material._id", docId]}
+                        },
+                    },
+                    "_id":0
+                }
+            },
+        ]
+        db.collection("folder").aggregate(query)
+            .toArray(function (err, items) {
+                if (err) throw err;
+                console.log(items);
+                res.send(items)
+            });
+    });
+})
+
+router.post('/uploadImage', upload.single('image'), function (req, res, next) {
+    console.log(JSON.stringify(req.file))
+    return res.send()
+})
+
+router.post('/newCourse', function(req, res){
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        delete req.body["_id"]
+        var msg="";
+        var admissionAmount=req.body['enrollmentLink']
+        db.collection("course").insertOne(req.body).then(r =>{
+            console.log(r)
+            let rr=r;
+            //response.send(r)
+            let docId=r.insertedId
+            db.collection("course").updateOne({
+                _id:docId
+            },{
+                $set:{
+                    "enrollmentLink":"http://localhost:4200/payment/courseid:"+r.insertedId+"/amount:"+admissionAmount
+                }
+            }).then(r=>{
+                res.send(rr)
+            })
+        } );
+    });
+})
+
+router.post('/deleteCourse', function (req, res) {
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        let docId = new ObjectId(req.body._id)
+        console.log(docId)
+        db.collection("course").deleteOne({
+                _id: docId
+            },
+            function (err, result) {
+                if (err) throw err;
+                console.log("Deleted from course");
+                res.send(result)
+            });
+    });
+});
 
 router.use(express.json());
 
