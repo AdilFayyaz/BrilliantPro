@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add New Course</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <ngb-alert *ngIf="a4Show" [type]="a4.type" (closed)="close('a4')">{{ a4.message }}</ngb-alert>
+    <ngb-alert *ngIf="a5Show" [type]="a5.type" (closed)="close('a5')">{{ a5.message }}</ngb-alert>
+    <span class="form-label"> Name: </span>
+    <input type="text" class="input-group-text" [(ngModel)]="course.name">
+
+    <span class="form-label"> Overview: </span>
+    <input type="text" class="input-group-text" [(ngModel)]="course.overview">
+
+    <span class="form-label"> Minimum Pass Score: </span>
+    <input type="number" class="input-group-text" [(ngModel)]="course.minPassScore">
+
+    <span class="form-label"> Enrollment Cost: </span>
+    <input type="text" class="input-group-text" [(ngModel)]="course.enrollmentLink">
+
+    <span class="form-label"> Start Date: </span>
+
+    <div class="input-group align-self-center">
+      <input type="text"  class="input-group-text" ngbDatepicker [(ngModel)]="this.tempSdate" #startDate="ngbDatepicker"/>
+      <span class="input-group-btn" style="width:0;">
+             <button (click)="startDate.toggle()" class="btn btn-primary">Choose</button>
+          </span>
+    </div>
+
+    <span class="form-label"> End Date: </span>
+
+    <div class="input-group align-self-center">
+      <input type="text"  class="input-group-text" ngbDatepicker [(ngModel)]="this.tempEdate"  #endDate="ngbDatepicker"/>
+      <span class="input-group-btn" style="width:0;">
+             <button (click)="endDate.toggle()" class="btn btn-primary">Choose</button>
+          </span>
+    </div>
+    <div>
+      <label>Change Image</label>
+      <input type="file" name="image" (change)="fileChosen($event)" required/>
+    </div>
+    <div>
+      <input type="submit" value="Upload" (click)="uploadImage()" />
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success" (click)="saveNewCourse()" >Save</button>
+    </div>
+</div>
