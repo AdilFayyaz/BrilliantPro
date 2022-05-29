@@ -17,7 +17,7 @@ import { LearnerDashboardComponent } from './learner-dashboard/learner-dashboard
 import { LearnerMaterialComponent } from './learner-material/learner-material.component';
 import { LearnerAssessmentComponent } from './learner-assessment/learner-assessment.component';
 import { CertificateComponent } from './certificate/certificate.component';
-
+import { CdTimerModule } from 'angular-cd-timer';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +39,8 @@ import { CertificateComponent } from './certificate/certificate.component';
     HttpClientModule,
     ChartsModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CdTimerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
