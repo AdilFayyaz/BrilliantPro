@@ -38,7 +38,7 @@ router.get('/courseName/:id', function (req, res) {
 mongoClient.connect(function (err, client) {
 const db = client.db(dbName);
 db.collection("course").find({'_id':ObjectId(req.params.id)})
-.project({"name":1,endDate:1,startDate:1,"assessments":1})
+.project({"name":1,endDate:1,startDate:1,"assessments":1,"minPassScore":1})
   .toArray(function (err, data) {
  if (err) throw err;
  console.log(data);
@@ -214,6 +214,33 @@ router.get('/getAssignmentsDone/:courseId/learner/:learner',async function (req,
     })
     
     })
+
+// change status of student
+// {
+    // "status":"completed",
+// "courseId":"",
+
+// }
+router.post('/setCourseStatus/:learner',async function (req, res) {
+    console.log("Got a POST request for /learner status update ="+JSON.stringify(req.body));
+    
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+       db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.body.courseId},{$set: {"courses.$.status":req.body.status}}).catch(error => console.log('errror', error));
+       res.send("status update done!")
+     })
+})
+// update attemptNo
+router.post('/setCourseAttempt/:learner',async function (req, res) {
+    console.log("Got a POST request for /learner status update ="+JSON.stringify(req.body));
+    
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+       db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.body.courseId},{$set: {"courses.$.attemptNo":req.body.attemptNo}}).catch(error => console.log('errror', error));
+       res.send("attemptNo update done!")
+     })
+})
+
 router.use(express.json());
 
 module.exports=router

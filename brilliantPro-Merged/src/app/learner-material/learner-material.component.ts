@@ -80,8 +80,7 @@ constructor(private route: ActivatedRoute) {
     this.allDoneAssessments=result
 
   
-      // this.allDoneAssessments[i].assessmentID
-      // console.log("length",this.assessmentsDetails[0])
+      let finish=0
       for(let j=0;j<this.assessmentsDetails.length;j++){
         let check=false
         for(let i=0;i<this.allDoneAssessments.length;i++){
@@ -90,7 +89,7 @@ constructor(private route: ActivatedRoute) {
            
         if(this.assessmentsDetails[j][0]._id==this.allDoneAssessments[i].assessmentID){
           console.log("already done!")
-          // this.assessmentsDetails.splice(j,1)
+          finish++;
           this.isdisable.push({a:this.assessmentsDetails[j][0].name,val:true})
           check=true;
         }
@@ -102,9 +101,47 @@ constructor(private route: ActivatedRoute) {
       this.isdisable.push({a:this.assessmentsDetails[j][0].name,val:false})
     }
     }
-    console.log("after ",this.isdisable)
+    console.log("after ",this.isdisable," ",finish ,"/",this.assessmentsDetails.length)
+    let gainedTotal=0;
+    if ((finish)==this.assessmentsDetails.length){
+      console.log("the course has finished for this learner")
+      for(let i=0;i<this.assessmentsDetails.length;i++){
+        gainedTotal+=this.allDoneAssessments[i].gainedAbs
+        console.log("gained total",gainedTotal)
+
+      }
+      if(gainedTotal<this.minPassingScore){
+        console.log("fail")
+      }
+      else{
+        console.log("pass")
+        this.UpdateToCompleted()
+      }
+    }
 
     })
+    .catch(error => console.log('error', error));
+ }
+ UpdateToCompleted(){
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  
+  var raw = JSON.stringify({
+    "status": "completed",
+    "courseId": this.courseId
+  });
+  
+  var requestOptions = {}
+  requestOptions={
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  
+  fetch("http://127.0.0.1:3000/learner/setCourseStatus/hurriya1", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
     .catch(error => console.log('error', error));
  }
  getProgress():any{
@@ -121,9 +158,7 @@ constructor(private route: ActivatedRoute) {
     fetch("http://127.0.0.1:3000/learner/courseProgress/"+this.courseId+"/learner/"+this.username, requestOptions)
       .then(response => response.json())
       .then(result => {console.log(result)
-        console.log("data0",typeof(this.progress))
         this.progress=Number( result.progress)
-        console.log("data1",typeof(this.progress))
         return this.progress
       })
       .catch(error => console.log('error', error));
@@ -140,7 +175,6 @@ constructor(private route: ActivatedRoute) {
   }
   perc:number=0
 addProgressToDB(amount:any ){
-  console.log("data2",typeof(this.progress))
   this.perc=<number>this.progress
 
  this.perc=this.perc+<number>(amount);
@@ -158,4 +192,20 @@ addProgressToDB(amount:any ){
     .catch(error => console.log('error', error));
   
 }
+minPassingScore:number=0
+getPassingScore():void{
+  var requestOptions = {}
+  requestOptions={
+    method: 'GET',
+    redirect: 'follow'
+  };
+  
+  fetch("http://127.0.0.1:3000/learner/courseName/"+this.courseId, requestOptions)
+    .then(response => response.json())
+    .then(result =>{ console.log(result[0])
+    this.minPassingScore= result[0].minPassScore
+    })
+    .catch(error => console.log('error', error));
+}
+
 }

@@ -90,6 +90,7 @@ courseId:number=0;
     if(this.weightedScore>=this.minPassing){
         this.passValue=true;
         this.passValueStr="Pass"
+        this.updateDB()
     }
     else{
       this.passValue=false
@@ -99,6 +100,7 @@ courseId:number=0;
 
     if(this.score==100 && this.score>80){
         this.grade="A"
+
     }
     else if(this.score<=80 && this.score>70){
       this.grade="B"
@@ -115,7 +117,7 @@ courseId:number=0;
     else{
       this.grade="F"
     }
-    this.updateDB()
+   
   }
   updateDB():void{
     console.log("name ",this.username)
