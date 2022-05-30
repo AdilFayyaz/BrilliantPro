@@ -129,7 +129,8 @@ courseId:number=0;
         "passValue": this.passValue,
         "quesSummary": this.questionSummary,
         "correctQ": this.correctCount,
-        "incorrectQ": this.incorrectCount
+        "incorrectQ": this.incorrectCount,
+        "gainedAbs":this.weightedScore
       }
     });
     

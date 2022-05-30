@@ -2,24 +2,26 @@
     <!-- <img src="imagesbg.jpg" id="bg" alt=""> -->
     
     <!-- <div class="glasscard"> -->
-    
+        <h6 class="prog">Course Progress:</h6>
+       <ngb-progressbar  type="success" [value]="getProgress()" [striped]="true" [animated]="true" ><i>{{getProgress() | number:'1.0-1' }}</i></ngb-progressbar> 
+
     
         <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
           
                 <div class="completed p-2 bd-highlight justify-content-center">
-                    <h1>Materials for :</h1>
+                    <h1>Materials for {{courseName}} :</h1>
                     <p *ngFor="let m of material; let j=index;">
                         Name: {{m.name}}<br>
                         Type: {{m.type}}<br>
                         downloadable:{{m.isDownloadable}}<br>
-                        <!-- <ng-template [ngIf]="{{m.isDownloadable}}==true"> -->
                             <ng-template *ngIf="m.isDownloadable== false; else elseBlock"> 
-                             
-                            </ng-template>
-                            <ng-template #elseBlock>
-                           <a class="btn btn-danger" href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a>
 
                             </ng-template>
+                            <ng-template #elseBlock>
+                           <a class="btn btn-danger" href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg" (click)="addProgress(m.name)">Download resource</a>
+
+                            </ng-template>
+                            <a class="btn btn-secondary" (click)="addProgress(m.name)">View</a>
 
                             <!-- <a href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a> -->
                        <br>

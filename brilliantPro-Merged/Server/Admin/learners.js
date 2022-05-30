@@ -119,7 +119,7 @@ mongoClient.connect( function (err, client) {
 })
 
 
-
+// get progress
 router.get('/courseProgress/:courseId/learner/:learner',async function (req, res) {
 console.log("Got a GET request progess ="+req.params.courseId);
 mongoClient.connect(function (err, client) {

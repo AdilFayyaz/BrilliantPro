@@ -12,10 +12,13 @@ a{
     -webkit-backdrop-filter: blur( 1px );
     border-radius: 10px;
 }
+.prog{
+    margin-top: 2vh;
+}
 main{
     /* background-color: yellowgreen; */
     /* float: right; */
-    height: 90vh;
+    height: 95vh;
 }
 /* .glasscard{
     background: rgba(255, 255, 255, 0.219);
@@ -32,10 +35,11 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
     backdrop-filter: blur( 1px );
     -webkit-backdrop-filter: blur( 1px );
     border-radius: 10px;
-    height: 70vh;
-    width: 60vw;
+    height: 100%;
+    width: 80vw;
     float: left;
-    margin: auto;
+    margin-top: 4px;
+    /* margin: auto; */
 }
 .unfinished{
     margin: auto;
