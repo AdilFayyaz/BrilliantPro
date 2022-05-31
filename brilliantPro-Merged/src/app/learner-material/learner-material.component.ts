@@ -17,6 +17,9 @@ username:any=""
 allDoneAssessments:any=[]
 isdisable:any=[]
 progress:number=0;
+completed=false;
+failed=false;
+numAttempts:number=0
 constructor(private route: ActivatedRoute) {
   console.log("helooo")
   this.courseId=history.state.course.courseId
@@ -26,6 +29,7 @@ constructor(private route: ActivatedRoute) {
   console.log("assesssment details",this.assessmentsDetails)
   this.username=this.route.snapshot.paramMap.get('person');
   this.getMaterial()
+  this.getPassingScore()
   for(let i=0;i<this.assessments.length;i++){
     this.getAssessments(this.assessments[i].assessmentID)
   }
@@ -107,27 +111,66 @@ constructor(private route: ActivatedRoute) {
       console.log("the course has finished for this learner")
       for(let i=0;i<this.assessmentsDetails.length;i++){
         gainedTotal+=this.allDoneAssessments[i].gainedAbs
-        console.log("gained total",gainedTotal)
+        console.log("gained total",gainedTotal," min pass",this.minPassingScore)
 
       }
       if(gainedTotal<this.minPassingScore){
         console.log("fail")
+        let isdisabled2=[]
+        for(let i=0;i<this.assessmentsDetails.length;i++){
+        isdisabled2.push({a:this.assessmentsDetails[i][0].name,val:false})
+       
+        }
+
+        this.isdisable=isdisabled2
+        console.log("chng",this.isdisable, "attm",this.numAttempts)
+
+        this.getCourseAttempts()
+        var requestOptions = {}
+        requestOptions={
+          method: 'GET',
+          redirect: 'follow'
+        };
+        
+        fetch("http://127.0.0.1:3000/learner/courseAttempt/"+this.courseId+"/learner/"+this.username, requestOptions)
+          .then(response => response.json())
+          .then(result => {console.log("atmno",result.attemptNo)
+          this.numAttempts=Number(result.attemptNo)
+          
+        // 
+          if(this.numAttempts<3){
+            this.numAttempts=this.numAttempts+1
+            console.log("attm2",this.numAttempts)
+            console.log("another attempt")
+          this.setAnotherAttempt()
+      
+          }
+          else{
+            console.log("3 attempts gone")
+            this.UpdateToStatus("failed")
+            this.failed=true
+          }
+          // 
+        })
+        .catch(error => console.log('error', error));
+
       }
       else{
         console.log("pass")
-        this.UpdateToCompleted()
+        this.UpdateToStatus("completed")
+        this.completed=true
       }
     }
 
     })
     .catch(error => console.log('error', error));
  }
- UpdateToCompleted(){
+ UpdateToStatus(stat:string){
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   
   var raw = JSON.stringify({
-    "status": "completed",
+    "status": stat,
     "courseId": this.courseId
   });
   
@@ -206,6 +249,68 @@ getPassingScore():void{
     this.minPassingScore= result[0].minPassScore
     })
     .catch(error => console.log('error', error));
+}
+
+
+getCourseAttempts(){
+  var requestOptions = {}
+  requestOptions={
+    method: 'GET',
+    redirect: 'follow'
+  };
+  
+  fetch("http://127.0.0.1:3000/learner/courseAttempt/"+this.courseId+"/learner/"+this.username, requestOptions)
+    .then(response => response.json())
+    .then(result => {console.log("atmno",result.attemptNo)
+    this.numAttempts=Number(result.attemptNo)
+    })
+    .catch(error => console.log('error', error));
+}
+
+setAnotherAttempt(){
+  // this.numAttempts= this.numAttempts+1
+  var myHeaders = new Headers();
+myHeaders.append("Content-Type", "text/plain");
+
+var raw = "{}";
+
+var requestOptions = {}
+requestOptions={
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("http://127.0.0.1:3000/learner/UpdateAssignmentsReattempt/"+this.courseId+"/learner/"+this.username, requestOptions)
+  .then(response => response.text())
+  .then(result => {console.log(result)
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      
+      var raw = JSON.stringify({
+        "courseId": this.courseId,
+        "attemptNo": this.numAttempts
+      });
+      
+      var requestOptions = {}
+      requestOptions={
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+      
+      fetch("http://127.0.0.1:3000/learner/setCourseAttempt/"+this.username, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    
+    
+  })
+  .catch(error => console.log('error', error)); // assigns empty array to assessmentDone
+
+ 
 }
 
 }

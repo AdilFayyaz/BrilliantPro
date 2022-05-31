@@ -85,18 +85,10 @@ courseId:number=0;
 
     }
     this.score=(this.correctCount/this.assessments.questions.length)*100
+    console.log(this.weightage,this.correctCount,"/",this.assessments.questions.length)
     this.weightedScore=(this.weightage*this.correctCount)/this.assessments.questions.length
 
-    if(this.weightedScore>=this.minPassing){
-        this.passValue=true;
-        this.passValueStr="Pass"
-        this.updateDB()
-    }
-    else{
-      this.passValue=false
-      this.passValueStr="Fail"
 
-    }
 
     if(this.score==100 && this.score>80){
         this.grade="A"
@@ -117,6 +109,19 @@ courseId:number=0;
     else{
       this.grade="F"
     }
+
+    if(this.weightedScore>=this.minPassing){
+      this.passValue=true;
+      this.passValueStr="Pass"
+      console.log("quiz passed")
+      this.updateDB()
+  }
+  else{
+    this.passValue=false
+    this.passValueStr="Fail"
+    console.log("quiz failed")
+
+  }
    
   }
   updateDB():void{

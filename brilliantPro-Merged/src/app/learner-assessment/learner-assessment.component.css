@@ -9,14 +9,19 @@
     background-color: grey;
 }
 .sample2{
-    border-radius: 10px ;
-
-    /* margin: auto; */
-    /* margin-top: 10vh;
-    margin-left: 16vw; */
+    border-left: 10px solid indigo;
+    margin: auto;
+    float: right;
+    height: 50vh;
+    width: 35vw;
+    background: rgba( 33, 211, 211, 0.15 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 1px );
+    -webkit-backdrop-filter: blur( 1px );
+    border-radius: 10px;
     height: 80vh;
     width: 60vw;
-    background-color: darkcyan;
+   
 }
 .carousel1{
     margin-top: 12vh;
