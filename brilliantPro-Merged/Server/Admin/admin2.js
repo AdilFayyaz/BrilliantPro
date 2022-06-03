@@ -3,7 +3,7 @@ const MongoClient = require("mongodb").MongoClient;
 // Connection url
 const url = "mongodb://localhost:27017";
 // Database Name
-const dbName = "BrilliantPro";
+const dbName = "brilliantPro";
 
 // Connect using MongoClient
 const mongoClient = new MongoClient(url);
@@ -24,7 +24,7 @@ router.use(bodyParser.urlencoded({extended: true}));
 // Add GET/POST calls here
 let storage = multer.diskStorage({
   destination: (req, file, f) => {
-    f(null, '../src/router/assets/Materials/');
+    f(null, '../src/assets/Materials/');
   },
   filename: (req, file, f) => {
     f(null, file.originalname);
@@ -39,7 +39,7 @@ router.post('/uploadMaterialContent', upload.array('Materials'), function(req, r
   // Push all materials to folders collection
   mongoClient.connect(function(err, client){
     const db = client.db(dbName);
-    db.collection("Folders").find({_id: ObjectId(req.query.folderId)}).toArray(
+    db.collection("folder").find({_id: ObjectId(req.query.folderId)}).toArray(
       function(err, result){
         if(err) throw err;
         console.log(req.files)
@@ -55,7 +55,7 @@ router.post('/uploadMaterialContent', upload.array('Materials'), function(req, r
           listObj.push(obj)
         }
         // push listObj to array materials in folders collection
-        db.collection("Folders").updateOne({_id: ObjectId(req.query.folderId)}, {$push: {materials: {$each: listObj}}}, function(err, result){
+        db.collection("folder").updateOne({_id: ObjectId(req.query.folderId)}, {$push: {materials: {$each: listObj}}}, function(err, result){
           if(err) throw err;
           console.log(result)
         })
@@ -70,7 +70,7 @@ router.post('/uploadMaterialContent', upload.array('Materials'), function(req, r
 router.post('/createFolder', async(req, res) =>{
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").insertOne({
+    db.collection("folder").insertOne({
         name: req.query.folderName,
         parent: "root",
         materials: []
@@ -83,9 +83,9 @@ router.post('/createFolder', async(req, res) =>{
 router.get('/getAllFolders', async(req, res) =>{
     mongoClient.connect(function(err, client) {
       const db = client.db(dbName);
-      db.collection("Folders").find({}).toArray(function(err, result){
+      db.collection("folder").find({}).toArray(function(err, result){
         res.send(result);
-    })      
+    })
   })
 })
 
@@ -94,7 +94,7 @@ router.post('/deleteFileFromFolder', async(req, res) =>{
   // delete material from folder
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").updateOne({
+    db.collection("folder").updateOne({
         _id: new ObjectId(req.query.folderId)
       },{
         $pull: { materials: {_id : new ObjectId(req.query.materialId) }}
@@ -108,7 +108,7 @@ router.post('/deleteFolder', async(req, res) =>{
   // find the folder and delete it
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").find({_id: new ObjectId(req.query.folderId)}).toArray(function(err, result){
+    db.collection("folder").find({_id: new ObjectId(req.query.folderId)}).toArray(function(err, result){
       // if(result[0]){
       //     fs.rmdir("Materials/"+result[0].name, (err) => {
       //       if (err) {
@@ -122,7 +122,7 @@ router.post('/deleteFolder', async(req, res) =>{
 
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").deleteOne({
+    db.collection("folder").deleteOne({
         _id: new ObjectId(req.query.folderId)
       })
   })
@@ -134,7 +134,7 @@ router.post('/deleteFolder', async(req, res) =>{
 router.post('/updateFolderName', async(req, res) =>{
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").updateOne({
+    db.collection("folder").updateOne({
         _id: new ObjectId(req.query.folderId)
       },{
         $set: { name: req.query.name }
@@ -147,7 +147,7 @@ router.post('/updateFolderName', async(req, res) =>{
 router.post('/uploadFileToServerOnFolder', async(req, res) =>{
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").updateOne({
+    db.collection("folder").updateOne({
         _id: new ObjectId(req.query.folderId)
       },{
         $push: { files: new ObjectId(req.query.fileId) }
@@ -159,7 +159,7 @@ router.post('/uploadFileToServerOnFolder', async(req, res) =>{
 router.post('/editFolder', async(req, res) =>{
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").updateOne({
+    db.collection("folder").updateOne({
         _id: new ObjectId(req.query.folderId)
       },{
         $set: { name: req.query.folderName }
@@ -174,7 +174,7 @@ router.post('/editMaterial', async(req, res) =>{
 
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Folders").updateOne({
+    db.collection("folder").updateOne({
         _id: new ObjectId(req.query.folderId),
         "materials._id": new ObjectId(req.query.materialId)
       },{
@@ -183,7 +183,7 @@ router.post('/editMaterial', async(req, res) =>{
     })
     return res.json("Folder name updated sucessfully")
   })
-  
+
 
 
 
@@ -193,7 +193,7 @@ router.post('/addAssessment', async(req, res) =>{
   console.log(req.body)
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").insertOne({
+    db.collection("assessment").insertOne({
         name: req.body.assessment_name,
         minPassing: req.body.assessment_minPassing,
         time: req.body.assessment_time,
@@ -207,9 +207,9 @@ router.post('/addAssessment', async(req, res) =>{
 router.get('/getAllAssessments', async(req, res) =>{
     mongoClient.connect(function(err, client) {
       const db = client.db(dbName);
-      db.collection("Assessments").find({}).toArray(function(err, result){
+      db.collection("assessment").find({}).toArray(function(err, result){
         res.send(result);
-    })      
+    })
   })
 })
 
@@ -217,7 +217,7 @@ router.get('/getAllAssessments', async(req, res) =>{
 router.post('/deleteAssessment', async(req, res) =>{
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").deleteOne({
+    db.collection("assessment").deleteOne({
         _id: new ObjectId(req.query.id)
       })
   })
@@ -229,7 +229,7 @@ router.post('/addMCQToAssessment', async(req, res) =>{
   console.log(req.body)
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").updateOne({
+    db.collection("assessment").updateOne({
         _id: new ObjectId(req.query.id)
       },{
         $push: { questions: {
@@ -251,7 +251,7 @@ router.post('/deleteMCQFromAssessment', async(req, res) =>{
   console.log(req.body.question)
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").updateOne({
+    db.collection("assessment").updateOne({
         _id: new ObjectId(req.query.assessmentId)
       },{
         $pull: { questions: {
@@ -278,7 +278,7 @@ router.post('/editAssessment', async(req, res) =>{
 
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").updateOne({
+    db.collection("assessment").updateOne({
         _id: new ObjectId(req.query.id)
       },{
         $set: obj
@@ -293,10 +293,10 @@ router.post('/editQuestion', async(req, res) =>{
   console.log(req.query.questionP)
   var j = JSON.parse(req.query.questionP)
   var questionName = j.question
-  
+
   mongoClient.connect(function(err, client) {
     const db = client.db(dbName);
-    db.collection("Assessments").updateOne({
+    db.collection("assessment").updateOne({
         _id: new ObjectId(req.query.assessmentId),
         "questions.question": questionName
       },{
@@ -338,8 +338,8 @@ router.post('/login', async(req, res) =>{
             else{
               return res.json("Invalid username or password")
             }
-          }) 
-        }  
+          })
+        }
       })
     })
   })

@@ -9,7 +9,7 @@ router.use(cors())
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../FrontEnd/src/assets')
+        cb(null, '../src/assets')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)
@@ -659,7 +659,7 @@ router.post('/newCourse', function(req, res){
                 _id:docId
             },{
                 $set:{
-                    "enrollmentLink":"http://localhost:4200/payment/courseid:"+r.insertedId+"/amount:"+admissionAmount
+                    "enrollmentLink":"http://localhost:4200/payment/"+r.insertedId+"/"+admissionAmount
                 }
             }).then(r=>{
                 res.send(rr)
