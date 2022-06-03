@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { AssessmentsService } from './assessments.service';
 
 @Component({
@@ -17,38 +17,38 @@ export class AssessmentsComponent implements OnInit {
    }
  
    // assessment form
-  assessmentForm = new FormGroup({
-    assessment_name: new FormControl(''),
-    assessment_minPassing: new FormControl(''),
-    assessment_time: new FormControl(''),
+  assessmentForm = new UntypedFormGroup({
+    assessment_name: new UntypedFormControl(''),
+    assessment_minPassing: new UntypedFormControl(''),
+    assessment_time: new UntypedFormControl(''),
   });
 
   // mcq form
-  mcqForm = new FormGroup({
-    question: new FormControl(''),
-    option1: new FormControl(''),
-    option2: new FormControl(''),
-    option3: new FormControl(''),
-    option4: new FormControl(''),
-    correctAnswer: new FormControl(''),
-    assessment_id: new FormControl(''),
+  mcqForm = new UntypedFormGroup({
+    question: new UntypedFormControl(''),
+    option1: new UntypedFormControl(''),
+    option2: new UntypedFormControl(''),
+    option3: new UntypedFormControl(''),
+    option4: new UntypedFormControl(''),
+    correctAnswer: new UntypedFormControl(''),
+    assessment_id: new UntypedFormControl(''),
   })
 
   // edit Assessment form
-  editAssessmentForm = new FormGroup({
-    assessment_name: new FormControl(''),
-    assessment_minPassing: new FormControl(''),
-    assessment_time: new FormControl(''),
+  editAssessmentForm = new UntypedFormGroup({
+    assessment_name: new UntypedFormControl(''),
+    assessment_minPassing: new UntypedFormControl(''),
+    assessment_time: new UntypedFormControl(''),
   })
 
   // edit question form
-  editQuesForm = new FormGroup({
-    question: new FormControl(''),
-    option1: new FormControl(''),
-    option2: new FormControl(''),
-    option3: new FormControl(''),
-    option4: new FormControl(''),
-    answer: new FormControl(''),
+  editQuesForm = new UntypedFormGroup({
+    question: new UntypedFormControl(''),
+    option1: new UntypedFormControl(''),
+    option2: new UntypedFormControl(''),
+    option3: new UntypedFormControl(''),
+    option4: new UntypedFormControl(''),
+    answer: new UntypedFormControl(''),
   })
 
   // add assessment

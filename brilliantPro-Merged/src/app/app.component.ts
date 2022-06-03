@@ -7,6 +7,7 @@ import {RouterOutlet} from "@angular/router";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
   title = 'FrontEnd';
   active="dashboard"
   animation=true;

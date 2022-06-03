@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { LoginService } from './login.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,11 @@ import { LoginService } from './login.service';
 export class LoginComponent implements OnInit {
 
   //  login form
-  loginForm = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl('')
+  loginForm = new UntypedFormGroup({
+    username: new UntypedFormControl(''),
+    password: new UntypedFormControl('')
   })
-  constructor(private loginservice: LoginService) { }
+  constructor(private loginservice: LoginService, private router:Router) { }
 
   ngOnInit(): void {
   }
@@ -26,10 +27,13 @@ export class LoginComponent implements OnInit {
         // Learner Account
         if(data.courses){
           console.log("navigate to learner");
+          this.router.navigateByUrl('/learnerDashboard')
         }
         else{
           console.log("navigate to admin");
-        }       
+          this.router.navigateByUrl('/dashboard');
+
+        }
       }
     )
   }

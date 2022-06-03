@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MaterialsManagementService } from './materials-management.service';
 import { HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { delay } from 'rxjs';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 
 @Component({
@@ -20,11 +20,11 @@ export class MaterialsManagementComponent implements OnInit {
   materialToEdit: any;
   folders: FolderData[] | undefined;
 
-  editMaterialForm = new FormGroup({
-    name: new FormControl(''),
-    type: new FormControl(''),
-    isDownloadable2: new FormControl(''),
-    isDownloadable: new FormControl(Boolean)
+  editMaterialForm = new UntypedFormGroup({
+    name: new UntypedFormControl(''),
+    type: new UntypedFormControl(''),
+    isDownloadable2: new UntypedFormControl(''),
+    isDownloadable: new UntypedFormControl(Boolean)
   })
 
 

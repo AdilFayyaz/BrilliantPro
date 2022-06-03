@@ -1,6 +1,4 @@
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
-import { temporaryAllocator } from '@angular/compiler/src/render3/view/util';
-import { error } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { json } from 'body-parser';
 import {Observable} from 'rxjs';
@@ -13,7 +11,7 @@ export class MaterialsManagementService {
 
 
   constructor(private httpclient: HttpClient) { }
- 
+
   getMaterials():Observable<any>{
     return this.httpclient.get('http://localhost:3000/getAllMaterials');
   }
@@ -42,9 +40,9 @@ export class MaterialsManagementService {
 
   // delete a material
   deleteMaterial(materialId:number | undefined, folderId: number | undefined):Observable<any>{
-    return this.httpclient.post("http://localhost:3000/deleteFileFromFolder?materialId="+materialId+"&folderId="+folderId, {}) 
+    return this.httpclient.post("http://localhost:3000/deleteFileFromFolder?materialId="+materialId+"&folderId="+folderId, {})
   }
-    
+
 
     // updated correct - add material to folder
   uploadFile(files :File[], folderId: number): Observable<any>{
@@ -63,7 +61,7 @@ export class MaterialsManagementService {
   //edit a material
   editMaterial(material: any, materialId: number | undefined, folderId: number | undefined, materialToEdit: any):Observable<any>{
     var obj = {
-      _id: "", 
+      _id: "",
       name: "",
       path: Boolean,
       type: "",
@@ -82,7 +80,7 @@ export class MaterialsManagementService {
     return this.httpclient.post('http://localhost:3000/editMaterial?materialId='+materialId+"&folderId="+folderId, obj)
   }
 
-  
+
 }
 
 
