@@ -1,47 +1,41 @@
 <script src="../../Server/Admin/admin2.js"></script>
 <script src="../../Server/Admin/mainApp.js"></script>
-<div class="d-flex box">
+<div class="d-flex box"  >
   <ul ngbNav #nav="ngbNav" [(activeId)]="active"  orientation="vertical" [animation]="animation">
     <li class="image">
       <img class="logo" src="assets/logo.png" alt="logo of application">
     </li>
-    <li ngbNavItem="dashboard" class="navCustomItem">
+    <li ngbNavItem="dashboard" class="navCustomItem"  >
       <a ngbNavLink class="navActive" routerLink="/dashboard">Dashboard</a>
       <ng-template ngbNavContent>
         <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="courses"  class="navCustomItem">
+    <li ngbNavItem="courses"  class="navCustomItem" *ngIf="isAdmin">
       <a ngbNavLink routerLink="/course">Courses</a>
       <ng-template ngbNavContent>
         <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="materials" class="navCustomItem">
+    <li ngbNavItem="materials" class="navCustomItem" *ngIf="isAdmin">
       <a ngbNavLink routerLink="/materials">Materials</a>
       <ng-template ngbNavContent>
         <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="assessments" class="navCustomItem">
+    <li ngbNavItem="assessments" class="navCustomItem" *ngIf="isAdmin" >
       <a ngbNavLink routerLink="/assessments">Assessments</a>
       <ng-template ngbNavContent>
         <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="learners"class="navCustomItem">
+    <li ngbNavItem="learners"class="navCustomItem" *ngIf="isAdmin">
       <a ngbNavLink routerLink="/learner">Learners</a>
       <ng-template ngbNavContent>
         <router-outlet></router-outlet>
       </ng-template>
     </li>
-    <li ngbNavItem="learnerDashboard" class="navCustomItem">
-      <a ngbNavLink routerLink="/learnerDashboard">Learner Dashboard</a>
-      <ng-template ngbNavContent>
-        <router-outlet></router-outlet>
-      </ng-template>
-    </li>
   </ul>
-  <a routerLink="/learnerDashboard">Learner Dashboard</a>
+  <!-- <a (click)="getAdmin()">Learner Dashboard</a> -->
   <div [ngbNavOutlet]="nav" class="ms-4"></div>
 </div>

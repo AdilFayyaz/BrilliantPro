@@ -24,7 +24,7 @@ router.use(bodyParser.urlencoded({extended: true}));
 // Add GET/POST calls here
 let storage = multer.diskStorage({
   destination: (req, file, f) => {
-    f(null, '../src/assets/Materials/');
+    f(null, '../../src/assets/Materials/');
   },
   filename: (req, file, f) => {
     f(null, file.originalname);

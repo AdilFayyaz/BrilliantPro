@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-learner-dashboard',
@@ -11,8 +12,8 @@ completeCoursesNames:any=[];
 unfinishedCourses:any=[];
 unfinishedCoursesNames:any=[];
 
-username:any="hurriya1"
-  constructor() {
+username:any=this.route.snapshot.paramMap.get('username')
+  constructor(private route: ActivatedRoute) {
     this.getCourses(this.username,"completed")
     this.getCourses(this.username,"enrolled")
    }
@@ -37,13 +38,13 @@ username:any="hurriya1"
     
     fetch("http://127.0.0.1:3000/learner/"+username+"/status/"+status, requestOptions)
       .then(response => response.json())
-      .then(result =>{ console.log("compleete",JSON.stringify( result))
-        if (status=="completed"){
+      .then(result =>{ console.log("course"+status,JSON.stringify( result))
+        if (status=="completed" &&  result.length!=0  ){
           this.completeCourses.push(result)
           console.log("heloo",this.completeCourses)
           this.getCoursesName("completed")
         }
-        else if(status=="enrolled"){
+        else if(status=="enrolled"  &&  result.length!=0 ){
           this.unfinishedCourses.push(result)
           console.log("helo0",this.unfinishedCourses)
           this.getCoursesName("enrolled")
@@ -54,7 +55,7 @@ username:any="hurriya1"
   }
 
   getCoursesName(status:string):void{
-    console.log("here",this.completeCourses[0].length,JSON.stringify(this.completeCourses[0][0].courseId))
+    // console.log("get course name",this.completeCourses[0].length,JSON.stringify(this.completeCourses[0][0].courseId))
     var requestOptions = {}
     requestOptions={
       method: 'GET',

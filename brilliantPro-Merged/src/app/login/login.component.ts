@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { LoginService } from './login.service';
 import {Router} from '@angular/router';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,8 @@ export class LoginComponent implements OnInit {
   })
   constructor(private loginservice: LoginService, private router:Router) { }
 
+
+
   ngOnInit(): void {
   }
 
@@ -27,11 +30,14 @@ export class LoginComponent implements OnInit {
         // Learner Account
         if(data.courses){
           console.log("navigate to learner");
-          this.router.navigateByUrl('/learnerDashboard')
+          this.loginservice.checkAdmin(false);
+          this.router.navigate(['/learnerDashboard',{username:this.loginForm.value.username}])
+
         }
         else{
           console.log("navigate to admin");
-          this.router.navigateByUrl('/dashboard');
+          this.loginservice.checkAdmin(true);
+          this.router.navigate(['/dashboard']);
 
         }
       }

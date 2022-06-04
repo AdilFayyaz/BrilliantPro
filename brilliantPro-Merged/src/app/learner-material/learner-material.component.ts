@@ -38,7 +38,10 @@ constructor(private route: ActivatedRoute,private modalService: NgbModal) {
   // this.isdisable.apply(null, Array(this.assessmentsDetails.length)).map(function (x: any, i: any) { return false; })
   // .apply(false, Array(this.assessmentsDetails.length))
   this.getProgressFromDB()
- console.log("sendinggg ",this.assessments)
+ console.log("sendinggg ",this.assessments,"-")
+
+
+
   }
 
   ngOnInit(): void {
@@ -55,6 +58,11 @@ constructor(private route: ActivatedRoute,private modalService: NgbModal) {
       .then(response => response.json())
       .then(result => {
       this.material=result
+      for(let i=0;i<this.material.length;i++){
+        this.material[i].path="../../assets/Materials/"+this.material[i].name
+        console.log("new path",this.material[i].path)
+       // var ret = "data-123".replace('data-','');
+      }
       console.log("material",JSON.stringify(this.material))})
       .catch(error => console.log('error', error));
  }
@@ -201,7 +209,7 @@ constructor(private route: ActivatedRoute,private modalService: NgbModal) {
     
     fetch("http://127.0.0.1:3000/learner/courseProgress/"+this.courseId+"/learner/"+this.username, requestOptions)
       .then(response => response.json())
-      .then(result => {console.log(result)
+      .then(result => {console.log("prog",result)
         this.progress=Number( result.progress)
         return this.progress
       })
@@ -220,12 +228,12 @@ constructor(private route: ActivatedRoute,private modalService: NgbModal) {
    }
 
   }
-  perc:number=0
+  perc:number=0.0
 addProgressToDB(amount:any ){
-  this.perc=<number>this.progress
+  this.perc=Number(this.progress)
 
- this.perc=this.perc+<number>(amount);
-  console.log("progress current",typeof(this.progress)," ",this.perc)
+ this.perc=Number(this.perc)+Number(amount);
+  console.log("progress current",typeof(this.perc)," ",this.perc,"x",Number(this.progress),"x",Number(amount))
 
     if(this.perc<=100){
       this.progress=this.perc

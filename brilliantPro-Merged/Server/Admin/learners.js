@@ -98,14 +98,25 @@ mongoClient.connect( function (err, client) {
            value.push(ObjectId( data[0].materials[i]))
            // { $in: [<value1>, <value2>, ... <valueN> ] } 
        }
-       console.log("val ",value)
-           db.collection("material").find({'_id':{$in:value}})
+
+       console.log("vals ",value)
+           db.collection("folder").find({'materials._id':{$in:value}}).project({"materials":1})
            .toArray(function (err, data1) 
            {
                if (err) throw err;
-               console.log(data1);
-               // material.push(data1)
-           res.send(data1);
+               console.log("got material",JSON.stringify(data1[0].materials[0]));
+               sending1=[]
+               for(let i=0;i<data1[0].materials.length;i++){
+                console.log("out",String(data1[0].materials[i]._id))
+                for(let j=0;j<value.length;j++){
+                    if(String(data1[0].materials[i]._id)==String(value[j])){
+                        console.log("in")
+                        sending1.push(data1[0].materials[i])
+                    }
+                }
+               }
+           console.log("final materials",sending1)
+           res.send(sending1)
 
            })
           
@@ -121,7 +132,7 @@ mongoClient.connect( function (err, client) {
 
 // get progress
 router.get('/courseProgress/:courseId/learner/:learner',async function (req, res) {
-console.log("Got a GET request progess ="+req.params.courseId);
+console.log("Got a GET request progess ="+req.params.courseId,"-",req.params.learner);
 mongoClient.connect(function (err, client) {
    const db = client.db(dbName);
   db.collection("learner").aggregate([{$match:{'username':req.params.learner}}, 
@@ -131,17 +142,17 @@ mongoClient.connect(function (err, client) {
                              $filter: {
                                  input: "$courses",
                                  as: "course",
-                                 cond: {$eq: ["$$course.courseId", req.params.courseId]}
+                                 cond: {$eq: ["$$course.courseId", ObjectId(req.params.courseId)]}
                              }
                          },
                      }
                  }
 ])
-.project( {"username":0,"password":0 , _id:0})
+.project( {"courses":1})
       .toArray(function (err, data) {
      if (err) throw err;
-     console.log(data[0].courses[0].progress);
-     res.send(data[0].courses[0]);
+     console.log("prog-",JSON.stringify(data[0].courses[0].progress));
+     res.send((data[0].courses[0]));
    })
 })
 
@@ -152,7 +163,7 @@ router.post('/UpdateCourseProgress/:courseId/learner/:learner/progress/:progress
 console.log("Got a GET request progess update ="+req.params.progress);
 mongoClient.connect(function (err, client) {
    const db = client.db(dbName);
-  db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.params.courseId},{$set: {"courses.$.progress":req.params.progress}})
+  db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":ObjectId(req.params.courseId)},{$set: {"courses.$.progress":req.params.progress}})
 
 })
 
@@ -182,7 +193,7 @@ router.post('/UpdateAssignmentsDone/:courseId/learner/:learner',async function (
     console.log("Got a GET request assessment done update ="+JSON.stringify(req.body.done)," ", req.params.courseId," ",req.params.learner);
     mongoClient.connect(function (err, client) {
        const db = client.db(dbName);
-      db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.params.courseId},{$push: {"courses.$.assessmentsDone":req.body.done}}).catch(error => console.log('errror', error));
+      db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":ObjectId(req.params.courseId)},{$push: {"courses.$.assessmentsDone":req.body.done}}).catch(error => console.log('errror', error));
       res.send("update done!")
     })
     
@@ -190,7 +201,7 @@ router.post('/UpdateAssignmentsDone/:courseId/learner/:learner',async function (
 
 // get done assessments of learner of a particular course
 router.get('/getAssignmentsDone/:courseId/learner/:learner',async function (req, res) {
-    console.log("Got a GET request progess ="+req.params.courseId);
+    console.log("Got a GET request assign done ="+req.params.courseId,"-",req.params.learner );
     mongoClient.connect(function (err, client) {
        const db = client.db(dbName);
       db.collection("learner").aggregate([{$match:{'username':req.params.learner}}, 
@@ -200,7 +211,7 @@ router.get('/getAssignmentsDone/:courseId/learner/:learner',async function (req,
                                  $filter: {
                                      input: "$courses",
                                      as: "course",
-                                     cond: {$eq: ["$$course.courseId", req.params.courseId]}
+                                     cond: {$eq: ["$$course.courseId", ObjectId( req.params.courseId)]}
                                  }
                              },
                          }
@@ -209,7 +220,7 @@ router.get('/getAssignmentsDone/:courseId/learner/:learner',async function (req,
     .project( {"username":0,"password":0 , _id:0})
           .toArray(function (err, data) {
          if (err) throw err;
-         console.log(data[0].courses[0].assessmentsDone);
+         console.log("assess done",data);
          res.send(data[0].courses[0].assessmentsDone);
        })
     })
@@ -254,11 +265,11 @@ router.get('/courseAttempt/:courseId/learner/:learner',async function (req, res)
                                  $filter: {
                                      input: "$courses",
                                      as: "course",
-                                     cond: {$eq: ["$$course.courseId", req.params.courseId]}
+                                     cond: {$eq: ["$$course.courseId",ObjectId(req.params.courseId)]}
                                  }
                              },
                          }
-                     }
+     }
     ])
     .project( {"username":0,"password":0 , _id:0})
           .toArray(function (err, data) {
@@ -275,7 +286,7 @@ router.post('/UpdateAssignmentsReattempt/:courseId/learner/:learner',async funct
     console.log("Got a GET request assessment done update ="+JSON.stringify(req.body.done)," ", req.params.courseId," ",req.params.learner);
     mongoClient.connect(function (err, client) {
        const db = client.db(dbName);
-      db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":req.params.courseId},{$set: {"courses.$.assessmentsDone":[]}}).catch(error => console.log('errror', error));
+      db.collection("learner").updateMany({username:req.params.learner,"courses.courseId":ObjectId(req.params.courseId)},{$set: {"courses.$.assessmentsDone":[]}}).catch(error => console.log('errror', error));
       res.send("update done!")
     })
     

@@ -9,7 +9,7 @@ router.use(cors())
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '../src/assets')
+        cb(null, "../../src/assets")
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)

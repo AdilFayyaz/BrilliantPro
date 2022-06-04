@@ -28,6 +28,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { NgxPaypalComponent, NgxPayPalModule } from "ngx-paypal";
 import {PaymentComponent} from "./payment/payment.component";
 import { AdminComponent } from './admin/admin.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { AdminComponent } from './admin/admin.component';
     MatIconModule,
     MdbTabsModule,
     BrowserAnimationsModule,
-    NgxPayPalModule
+    NgxPayPalModule,
+    PdfViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
