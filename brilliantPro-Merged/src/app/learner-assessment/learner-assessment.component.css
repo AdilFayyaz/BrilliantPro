@@ -7,6 +7,7 @@
     height: 80vh;
     width: 60vw;
     background-color: grey;
+    border-left: 10px solid indigo;
 }
 .sample2{
     border-left: 10px solid indigo;
@@ -26,4 +27,7 @@
 .carousel1{
     margin-top: 12vh;
 
+}
+.back{
+    margin-top: 5%;
 }
