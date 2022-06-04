@@ -10,38 +10,67 @@
     -webkit-backdrop-filter: blur( 1px );
     border-radius: 10px;
 }
+.bg{
+    background-color: beige;
+    background-image: url("../../assets/pattern.jpg");  
+    background-repeat: repeat;
+    /* background-size: cover;   */
+    height: 100%;
+    padding: 3px;
+    margin: auto;
+}
+.bg2{
+    background-color: #839BDD; 
+    height: 98%;
+    padding: auto;
+    margin: 5px;
+}
+h1{
+    padding-top: 3%;
+    padding-bottom: 4%;
+}
 main{
     /* background-color: yellowgreen; */
     /* float: right; */
-    height: 90vh;
+    height: 100vh;
+    width: auto;
+    margin: auto;
+    padding: auto;
 }
-/* .glasscard{
-    background: rgba(255, 255, 255, 0.219);
-box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-backdrop-filter: blur( 8px );
--webkit-backdrop-filter: blur( 8px );
-border-radius: 10px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-} */
+.medal{
+    /* background-color: blue; */
+    width: 29%;
+    height: auto;
+   
+}
+.sign-container{
+    float:right;
+    /* background-color: blueviolet; */
+    width: 16vw;
+    height: auto;
+      margin-top:10%;
+}
+.sign{
+    /* background-color: red; */
+    width: 80%;
+    height: auto;
+    /* float: right; */
+   
+}
+p{
+    /* background-color: rgb(255, 251, 0); */
+    width:70%
+
+}
+
 .completed{
     background: rgba(9, 70, 238, 0.397);
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 1px );
     -webkit-backdrop-filter: blur( 1px );
     border-radius: 10px;
-    height: 70vh;
+    height: 80vh;
     width: 60vw;
     float: left;
     margin: auto;
-}
-.unfinished{
-    margin: auto;
-    float: right;
-    height: 40vh;
-    width: 30vw;
-    background: rgba( 33, 211, 211, 0.15 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 1px );
-    -webkit-backdrop-filter: blur( 1px );
-    border-radius: 10px;
 }
