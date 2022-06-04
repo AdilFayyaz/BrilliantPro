@@ -11,23 +11,46 @@
           
                 <div class="completed p-2 bd-highlight justify-content-center">
                     <h1>Materials for {{courseName}} :</h1>
-                    <p *ngFor="let m of material; let j=index;">
-                        Name: {{m.name}}<br>
+                    <div *ngFor="let m of material; let j=index;">
+                       <b>{{j}}. Name: {{m.name}}</b><br>
                         Type: {{m.type}}<br>
-                        downloadable:{{m.isDownloadable}}<br>
+                        <!-- downloadable:{{m.isDownloadable}}<br> -->
                             <ng-template *ngIf="m.isDownloadable== false; else elseBlock"> 
-
+../../assets/db.jpg
                             </ng-template>
                             <ng-template #elseBlock>
-                           <a class="btn btn-danger" href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg" (click)="addProgress(m.name)">Download resource</a>
+                           <a class="btn btn-danger" href="{{m.path}}" download="{{m.name}}" (click)="addProgress(m.name)">Download resource</a>
 
                             </ng-template>
-                            <a class="btn btn-secondary" (click)="addProgress(m.name)">View</a>
+                            <button class="btn  btn-secondary" (click)="open(content);addProgress(m.name)">View</button>
+                                                <!-- modal -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">View Material</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
 
-                            <!-- <a href="../../../../../../../UX/m5/final voting/WhatsApp Image 2022-04-06 at 15.04.40 (1).jpeg" download="image123.jpeg">Download resource</a> -->
+    <div class="modal-body d-flex justify-content-center">
+                  <pdf-viewer *ngIf="m.type=='pdf'" [src]="m.path" [render-text]="true" [original-size]="false" style="width: 400px; height: 500px"></pdf-viewer>
+            <img *ngIf="m.type=='img'" [src]="m.path"  width="400" height="320">
+            <video *ngIf="m.type=='mp4'" width="400" height="320" controls>
+                <source [src]="m.path" type="video/mp4">
+              </video>
+              
+   
+    </div>
+
+    <div class="modal-footer">
+    </div>
+  </ng-template>
+   
+  <hr>
+
+  <!-- model end -->
                        <br>
                       
-                    </p>
+                        </div>
+
                     <h5>Assessments for the course:</h5>
                      <a class="btn btn-outline-light" routerLink="assessment" [state]="{assessments:assessmentsDetails[ai][0] , weightage:assessments[ai].weightage, courseId:courseId}" *ngFor="let a of assessmentsDetails; let ai=index;"[class.disabled]="isdisable[ai].val">{{a[0].name}}</a>
             
