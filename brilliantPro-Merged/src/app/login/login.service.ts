@@ -1,23 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
    isadmin$: any;
 
-  constructor(private httpclient: HttpClient) { }
-  // private eventCallback = new Subject<boolean>(); // Source
-  // eventCallback$ = this.eventCallback.asObservable(); // Stream
+  constructor(private httpclient: HttpClient) {
+
+   }
+  private isAdmin = new BehaviorSubject(false);
+ currentIsAdmin = this.isAdmin.asObservable();
+
+
 
   checkAdmin(position: boolean): void{
-  
-    this.isadmin$=position
-    console.log("---",this.isadmin$)
+
+    this.isAdmin.next(position)
   }
-  getIsAdmin(): boolean{
+  getIsAdmin(position: boolean): boolean{
   
     return(this.isadmin$)
   }
