@@ -21,4 +21,9 @@ export class LearnerService {
   updateLearner(l:LearnerInterface){
     return this.http.post("http://localhost:3000/admin/updateLearner", l);
   }
+
+  addNewCourseToLearner(id:string, courseId:string){
+    return this.http.post("http://localhost:3000/learner/addNewCourseToLearner", {id:id, courseId:courseId});
+  }
+
 }

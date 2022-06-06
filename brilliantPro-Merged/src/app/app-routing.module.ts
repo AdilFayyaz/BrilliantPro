@@ -18,7 +18,7 @@ const routes:Routes=[
   {path:'course', component:CourseComponent},
   {path:'assessments', component:AssessmentsComponent},
   {path:'materials', component:MaterialsManagementComponent},
-  {path:'payment/:courseId/:amount', component:PaymentComponent},
+  {path:'payment/:courseId/:amount/:username', component:PaymentComponent},
   {path: 'learner', component:LearnerComponent},
   {path:'login', component:LoginComponent},
   {path: 'learnerDashboard', component:LearnerDashboardComponent},

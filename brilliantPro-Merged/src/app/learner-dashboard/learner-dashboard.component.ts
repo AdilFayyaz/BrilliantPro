@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CoursesService } from '../services/courses.service';
 
 @Component({
   selector: 'app-learner-dashboard',
@@ -11,22 +12,56 @@ completeCourses:any=[];
 completeCoursesNames:any=[];
 unfinishedCourses:any=[];
 unfinishedCoursesNames:any=[];
-
+allCourses: any=[]
+display = "none";
 username:any=this.route.snapshot.paramMap.get('username')
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private coursesService: CoursesService, private router: Router) {
     this.getCourses(this.username,"completed")
     this.getCourses(this.username,"enrolled")
    }
-
+   display2 ="none";
+  getAllCourses(){
+    this.coursesService.getAllCourses().subscribe(
+      (data)=>{
+        for(let i=0;i<data.length;i++){
+          this.allCourses.push(data[i])
+        }
+        console.log("all courses",this.allCourses)
+      }
+    )
+   }
   ngOnInit(): void {
-    
-   
   }
+  openModal() {
+    this.getAllCourses();
+    this.display = "block";
+  }
+  getEnrollmentLink(id:string){
+    this.coursesService.getAllInCourse(id).subscribe(
+      (data)=>{
+        var link = data[0].enrollmentLink.split("4200")
+        this.router.navigate([link[1] + "/" + this.username])
+      }
+    )
+  }
+  openPaymentInfo(){
+    if(this.display2=="none"){
+      this.display2="block";
+    }
+    else{
+      this.display2="none";
+    }
+  }
+  onCloseHandled() {
+    this.allCourses = [];
+    this.display = "none";
+  }
+
  getCourses(username:string,status:string):void{
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     
- 
+  
     
     var requestOptions = {}
     requestOptions={

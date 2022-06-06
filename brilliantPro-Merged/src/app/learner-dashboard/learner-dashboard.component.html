@@ -1,3 +1,4 @@
+
 <div>
  <h3 style="margin-top:5% ;">Welcome {{username}}</h3>
 
@@ -6,11 +7,36 @@
         <a class="btn btn-primary"  value="back" href="http://localhost:4200/login">Log out <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
           <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
         </svg></a>
+        <button type="button" class="btn btn-primary" (click)="openModal()">Enroll in Courses</button>
+    <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+         <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                     <div class="modal-header">
+                           <h4 class="modal-title">Enroll in Courses</h4>
+                           <button type="button" class="close" aria-label="Close"  (click)="onCloseHandled()"><span aria-hidden="true">&times;</span></button>
+                         </div>
+                        <div class="modal-body">
+                           <!-- list all the courses in tiles -->
+                            <ul *ngFor="let c of allCourses">
+                              <li style="list-style-type: none;">
+                                  <button type="button" class="btn btn-primary" (click)="this.getEnrollmentLink(c._id)">{{c.name}}</button>  
+                              </li>
+                              
+                            </ul>
+                            
+                         </div>
+                     <div class="modal-footer">
+                          <button type="button" class="btn btn-default" (click)="onCloseHandled()" >Close</button>
+                      </div>
+            </div>
+             </div>
         </div>
+       
+      </div>
+      
+       
  <!--  -->
     <div class="glasscard d-flex">
-       
-    
         <main class="d-flex flex-wrap flex-row bd-highlight mb-3 justify-content-center">
             
                 <div class=" card completed p-2 bd-highlight" >
@@ -44,3 +70,4 @@
         </main>
     </div>
     </div>
+ 
