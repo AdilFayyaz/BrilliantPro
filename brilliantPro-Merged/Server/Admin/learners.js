@@ -291,6 +291,23 @@ router.post('/UpdateAssignmentsReattempt/:courseId/learner/:learner',async funct
     })
     
 })
+
+router.post('/addNewCourseToLearner',async function (req, res) {
+    console.log(req.body)
+    mongoClient.connect(function (err, client) {
+        const db = client.db(dbName);
+        db.collection("learner").findOneAndUpdate({username: req.body.id}, {$push: {"courses":{
+            courseId: ObjectId(req.body.courseId),
+            status: "enrolled",
+            progress: 0,
+            score: 0,
+            attemptNo: 0,
+            assessmentsDone: []
+        }}})
+    })
+    return res.json("added new course to learner")
+})
+    
 router.use(express.json());
 
 module.exports=router
