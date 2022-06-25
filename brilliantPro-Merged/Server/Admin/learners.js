@@ -81,53 +81,55 @@ db.collection("learner").aggregate([{$match:{'username':req.params.learner}},
 // 
 // gets course material from course id
 router.get('/courseMaterial/:id',async function (req, res) {
-console.log("Got a GET request course name ="+req.params.id);
-material=[]
-mongoClient.connect( function (err, client) {
-   const db = client.db(dbName);
-
-
-   db.collection("course").find({'_id':ObjectId(req.params.id)})
-   .project({"materials":1}).toArray( function (err, data) 
-   {
-       if (err) throw err;
-       console.log(data[0]);
-       value=[]
-       for(i=0;i<data[0].materials.length;i++)
+    console.log("Got a GET request course name ="+req.params.id);
+    material=[]
+    mongoClient.connect( function (err, client) {
+       const db = client.db(dbName);
+    
+    
+       db.collection("course").find({'_id':ObjectId(req.params.id)})
+       .project({"materials":1}).toArray( function (err, data) 
        {
-           value.push(ObjectId( data[0].materials[i]))
-           // { $in: [<value1>, <value2>, ... <valueN> ] } 
-       }
-
-       console.log("vals ",value)
-           db.collection("folder").find({'materials._id':{$in:value}}).project({"materials":1})
-           .toArray(function (err, data1) 
+           if (err) throw err;
+           console.log(data[0]);
+           value=[]
+           for(i=0;i<data[0].materials.length;i++)
            {
-               if (err) throw err;
-               console.log("got material",JSON.stringify(data1[0].materials[0]));
-               sending1=[]
-               for(let i=0;i<data1[0].materials.length;i++){
-                console.log("out",String(data1[0].materials[i]._id))
-                for(let j=0;j<value.length;j++){
-                    if(String(data1[0].materials[i]._id)==String(value[j])){
-                        console.log("in")
-                        sending1.push(data1[0].materials[i])
+               value.push(ObjectId( data[0].materials[i]))
+               // { $in: [<value1>, <value2>, ... <valueN> ] } 
+           }
+    
+           console.log("vals ",value)
+               db.collection("folder").find({}).project({"materials":1})
+               .toArray(function (err, data1) 
+               {
+                   if (err) throw err;
+                   console.log("got material",JSON.stringify(data1[0].materials));
+                   for(let j=0;j<data1.length;j++){
+                        sending1=[]
+                        for(let i=0;i<data1[j].materials.length;i++){
+                            console.log("out",String(data1[j].materials[i]._id))
+                            for(let j=0;j<value.length;j++){
+                                if(String(data1[0].materials[i]._id)==String(value[j])){
+                                    console.log("in")
+                                    sending1.push(data1[0].materials[i])
+                                }
+                            }
+                        }
                     }
-                }
-               }
-           console.log("final materials",sending1)
-           res.send(sending1)
-
-           })
-          
-       
-       // res.send(material)
-   })
-  
-
-})
-
-})
+               console.log("final materials",sending1)
+               res.send(sending1)
+    
+               })
+              
+           
+           // res.send(material)
+       })
+      
+    
+    })
+    
+    })
 
 
 // get progress
